@@ -249,7 +249,7 @@ func TestString(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)
@@ -297,10 +297,10 @@ func TestStringLenBetweenPanic(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		panicked, panicVal := panicSafeTestStringLenBetween(
 			t, tc.lower, tc.upper)
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}

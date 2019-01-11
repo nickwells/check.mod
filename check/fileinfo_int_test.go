@@ -55,7 +55,7 @@ func TestModeName(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		val := modeName(tc.mode)
 		if val != tc.expVal {
 			t.Log(tcID)

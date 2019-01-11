@@ -206,7 +206,7 @@ func TestTime(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		err := tc.cf(tc.val)
 		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)
@@ -269,9 +269,9 @@ func TestTimeBetweenPanic(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		testName := fmt.Sprintf("%d: %s", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 		panicked, panicVal := panicSafeTestTimeBetween(t, tc.start, tc.end)
-		testhelper.PanicCheckString(t, testName,
+		testhelper.PanicCheckString(t, tcID,
 			panicked, tc.panicExpected,
 			panicVal, tc.panicMustContain)
 	}

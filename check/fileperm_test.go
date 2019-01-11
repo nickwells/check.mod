@@ -153,7 +153,7 @@ func TestFilePerm(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		err := tc.cf(tc.fileMode)
 		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)

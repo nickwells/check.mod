@@ -50,7 +50,7 @@ func TestFileInfoUnix(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		err = tc.cf(fi)
 		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)

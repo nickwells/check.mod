@@ -201,7 +201,7 @@ func TestFileInfo(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s :", i, tc.name)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
 
 		fi, err := os.Stat(tc.fileName)
 		if err != nil {
