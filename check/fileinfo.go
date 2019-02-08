@@ -35,8 +35,8 @@ func FileInfoPerm(c FilePerm) FileInfo {
 	}
 }
 
-// FileInfoName returns a function that will check that the file permissions
-// pass the test specified by the passed String check
+// FileInfoName returns a function that will check that the file name
+// passes the test specified by the passed String check
 func FileInfoName(c String) FileInfo {
 	return func(fi os.FileInfo) error {
 		err := c(fi.Name())
