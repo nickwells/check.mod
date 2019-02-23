@@ -167,7 +167,7 @@ func TestDuration(t *testing.T) {
 				"the value",
 				"must be greater than",
 				"must be less than",
-				" OR ",
+				" or ",
 			},
 		},
 		{

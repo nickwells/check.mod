@@ -202,7 +202,7 @@ func TestInt64Slice(t *testing.T) {
 				"must be greater than",
 				"must be less than",
 				"must equal",
-				" OR ",
+				" or ",
 			},
 		},
 		{

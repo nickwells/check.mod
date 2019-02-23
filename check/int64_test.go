@@ -183,7 +183,7 @@ func TestInt64(t *testing.T) {
 				"must be greater than",
 				"must be less than",
 				"must be a divisor of",
-				" OR ",
+				" or ",
 			},
 		},
 		{

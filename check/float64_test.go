@@ -145,7 +145,7 @@ func TestFloat64(t *testing.T) {
 			errMustContain: []string{
 				"must be greater than",
 				"must be less than",
-				" OR ",
+				" or ",
 			},
 		},
 		{

@@ -95,7 +95,7 @@ func TestFilePerm(t *testing.T) {
 					" should have none of the permissions in 0211",
 				" should have none of the permissions in 0121",
 				" should have none of the permissions in 0112",
-				" OR ",
+				" or ",
 			},
 		},
 		{

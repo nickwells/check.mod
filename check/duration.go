@@ -94,7 +94,7 @@ func DurationOr(chkFuncs ...Duration) Duration {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

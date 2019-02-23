@@ -62,7 +62,7 @@ func FilePermOr(chkFuncs ...FilePerm) FilePerm {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

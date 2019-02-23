@@ -113,7 +113,7 @@ func Int64SliceOr(chkFuncs ...Int64Slice) Int64Slice {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

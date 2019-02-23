@@ -202,11 +202,12 @@ func TestString(t *testing.T) {
 			errMustContain: []string{
 				"must be greater than",
 				"must be less than",
-				" OR ",
+				" or ",
 			},
 		},
 		{
-			name: "And: len(\"abcd\") > 2 , len(\"abcd\") > 3, len(\"abcd\") < 6",
+			name: "And: len(\"abcd\") > 2 ," +
+				" len(\"abcd\") > 3, len(\"abcd\") < 6",
 			checkFunc: check.StringAnd(
 				check.StringLenGT(2),
 				check.StringLenGT(3),

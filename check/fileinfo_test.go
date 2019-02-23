@@ -176,7 +176,7 @@ func TestFileInfo(t *testing.T) {
 				"the check on the name of '",
 				"' failed: ",
 				"should have 'XXX' as a prefix",
-				" OR ",
+				" or ",
 				"should have 'YYY' as a prefix",
 			},
 		},

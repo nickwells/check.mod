@@ -90,7 +90,7 @@ func Float64Or(chkFuncs ...Float64) Float64 {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

@@ -123,7 +123,7 @@ func Int64Or(chkFuncs ...Int64) Int64 {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

@@ -114,7 +114,7 @@ func StringSliceOr(chkFuncs ...StringSlice) StringSlice {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

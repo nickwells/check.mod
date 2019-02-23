@@ -96,27 +96,27 @@ func modeName(m os.FileMode) string {
 
 	if m&os.ModeDir == os.ModeDir {
 		name += sep + "a directory"
-		sep = " or "
+		sep = _Or
 	}
 	if m&os.ModeSymlink == os.ModeSymlink {
 		name += sep + "a symlink"
-		sep = " or "
+		sep = _Or
 	}
 	if m&os.ModeNamedPipe == os.ModeNamedPipe {
 		name += sep + "a named pipe"
-		sep = " or "
+		sep = _Or
 	}
 	if m&os.ModeSocket == os.ModeSocket {
 		name += sep + "a socket"
-		sep = " or "
+		sep = _Or
 	}
 	if m&os.ModeDevice == os.ModeDevice {
 		name += sep + "a device"
-		sep = " or "
+		sep = _Or
 	}
 	if m&os.ModeIrregular == os.ModeIrregular {
 		name += sep + "a non-regular file"
-		sep = " or "
+		//sep = _Or
 	}
 	return name
 }
@@ -149,7 +149,7 @@ func FileInfoOr(chkFuncs ...FileInfo) FileInfo {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " OR "
+			sep = _Or
 		}
 		return fmt.Errorf("%s)", compositeErr)
 	}

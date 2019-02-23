@@ -202,7 +202,7 @@ func TestStringSlice(t *testing.T) {
 				"must be greater than",
 				"must be less than",
 				"must equal",
-				" OR ",
+				" or ",
 			},
 		},
 		{
