@@ -137,17 +137,92 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			name:      "HasPrefix - good",
-			checkFunc: check.StringHasPrefix("abc"),
-			val:       "abcd",
+			name:        "LenGT: 1 !< 1",
+			checkFunc:   check.StringLenGT(1),
+			val:         "a",
+			errExpected: true,
+			errMustContain: []string{
+				"the length of the value",
+				"must be greater than",
+			},
 		},
 		{
-			name:        "HasPrefix - bad - completely different",
-			checkFunc:   check.StringHasPrefix("abc"),
+			name:        "LenGT: 2 !< 1",
+			checkFunc:   check.StringLenGT(2),
+			val:         "a",
+			errExpected: true,
+			errMustContain: []string{
+				"the length of the value",
+				"must be greater than",
+			},
+		},
+		{
+			name:      "Between: 1 <= 2 <= 3",
+			checkFunc: check.StringLenBetween(1, 3),
+			val:       "ab",
+		},
+		{
+			name:      "Between: 1 <= 1 <= 3",
+			checkFunc: check.StringLenBetween(1, 3),
+			val:       "a",
+		},
+		{
+			name:      "Between: 1 <= 3 <= 3",
+			checkFunc: check.StringLenBetween(1, 3),
+			val:       "abc",
+		},
+		{
+			name:        "Between: 1 !<= 0 <= 3",
+			checkFunc:   check.StringLenBetween(1, 3),
+			val:         "",
+			errExpected: true,
+			errMustContain: []string{
+				"the length of the value",
+				"must be between",
+				" - too short",
+			},
+		},
+		{
+			name:        "Between: 1 <= 4 !<= 3",
+			checkFunc:   check.StringLenBetween(1, 3),
+			val:         "abcd",
+			errExpected: true,
+			errMustContain: []string{
+				"the length of the value",
+				"must be between",
+				" - too long",
+			},
+		},
+		{
+			name: "Matches - good",
+			checkFunc: check.StringMatchesPattern(
+				regexp.MustCompile("^a[a-z]+d$"),
+				"3 or more letters starting with an a and ending with d"),
+			val: "abcd",
+		},
+		{
+			name: "Matches - bad",
+			checkFunc: check.StringMatchesPattern(
+				regexp.MustCompile("^a[a-z]+d$"),
+				"3 or more letters starting with an a and ending with d"),
+			val:         "xxx",
+			errExpected: true,
+			errMustContain: []string{
+				"does not match the pattern",
+			},
+		},
+		{
+			name:      "Equals - good",
+			checkFunc: check.StringEquals("abc"),
+			val:       "abc",
+		},
+		{
+			name:        "Equals - bad - different",
+			checkFunc:   check.StringEquals("abc"),
 			val:         "xxxx",
 			errExpected: true,
 			errMustContain: []string{
-				"should have 'abc' as a prefix",
+				"should equal 'abc'",
 			},
 		},
 		{

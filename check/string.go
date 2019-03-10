@@ -86,8 +86,20 @@ func StringMatchesPattern(re *regexp.Regexp, reDesc string) String {
 	}
 }
 
-// StringHasPrefix returns a function that checks that the
-// string has the supplied string as a prefix
+// StringEquals returns a function that checks that the string equals the
+// supplied string. This could be useful as one of a list of checks in an
+// StringOr(...)
+func StringEquals(s string) String {
+	return func(v string) error {
+		if v != s {
+			return fmt.Errorf("%s should equal '%s'", v, s)
+		}
+		return nil
+	}
+}
+
+// StringHasPrefix returns a function that checks that the string has the
+// supplied string as a prefix
 func StringHasPrefix(prefix string) String {
 	return func(v string) error {
 		if !strings.HasPrefix(v, prefix) {
@@ -98,8 +110,8 @@ func StringHasPrefix(prefix string) String {
 	}
 }
 
-// StringHasSuffix returns a function that checks that the
-// string has the supplied string as a suffix
+// StringHasSuffix returns a function that checks that the string has the
+// supplied string as a suffix
 func StringHasSuffix(suffix string) String {
 	return func(v string) error {
 		if !strings.HasSuffix(v, suffix) {
@@ -110,8 +122,8 @@ func StringHasSuffix(suffix string) String {
 	}
 }
 
-// StringOr returns a function that will check that the value, when
-// passed to each of the check funcs in turn, passes at least one of them
+// StringOr returns a function that will check that the value, when passed to
+// each of the check funcs in turn, passes at least one of them
 func StringOr(chkFuncs ...String) String {
 	return func(s string) error {
 		compositeErr := ""

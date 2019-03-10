@@ -1,3 +1,3 @@
 module github.com/nickwells/check.mod
 
-require github.com/nickwells/testhelper.mod v1.1.0
+require github.com/nickwells/testhelper.mod v1.2.0

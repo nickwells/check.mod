@@ -12,7 +12,7 @@ import (
 
 func TestFileInfo(t *testing.T) {
 	fileWithSetPerms := "testdata/IsAFile.PBits0600"
-	os.Chmod(fileWithSetPerms, 0600) // force the file mode
+	_ = os.Chmod(fileWithSetPerms, 0600) // force the file mode
 
 	fileWithKnownInfo := "testdata/IsAFile"
 	fi, err := os.Stat(fileWithKnownInfo)
