@@ -14,11 +14,29 @@ func StringSliceStringCheck(sc String) StringSlice {
 		for i, s := range v {
 			if err := sc(s); err != nil {
 				return fmt.Errorf(
-					"list entry: %d (%s) does not satisfy the check: %s",
+					"list entry: %d (%s) does not pass the test: %s",
 					i, s, err)
 			}
 		}
 		return nil
+	}
+}
+
+// StringSliceContains returns a check function that checks that at least one
+// member of the list matches the supplied String check func. The condition
+// parameter should describe the check that is being performed. For instance,
+// if the check is that the string length must be greater than 5 characters
+// then the condition parameter should be
+//     "the string should be greater than 5 characters"
+func StringSliceContains(sc String, condition string) StringSlice {
+	return func(v []string) error {
+		for _, s := range v {
+			if err := sc(s); err == nil {
+				return nil
+			}
+		}
+		return fmt.Errorf("none of the list entries passes the test: %s",
+			condition)
 	}
 }
 
@@ -136,7 +154,8 @@ func StringSliceAnd(chkFuncs ...StringSlice) StringSlice {
 
 // StringSliceNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the slice of strings should not have.
 func StringSliceNot(c StringSlice, errMsg string) StringSlice {
 	return func(v []string) error {
 		err := c(v)
@@ -144,6 +163,6 @@ func StringSliceNot(c StringSlice, errMsg string) StringSlice {
 			return nil
 		}
 
-		return fmt.Errorf("%v %s", v, errMsg)
+		return fmt.Errorf("%v should not be %s", v, errMsg)
 	}
 }

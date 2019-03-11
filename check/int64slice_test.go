@@ -17,22 +17,19 @@ func TestInt64Slice(t *testing.T) {
 		errMustContain []string
 	}{
 		{
-			name:        "NoDups - none - empty",
-			checkFunc:   check.Int64SliceNoDups,
-			val:         []int64{},
-			errExpected: false,
+			name:      "NoDups - none - empty",
+			checkFunc: check.Int64SliceNoDups,
+			val:       []int64{},
 		},
 		{
-			name:        "NoDups - none - 1 entry",
-			checkFunc:   check.Int64SliceNoDups,
-			val:         []int64{1},
-			errExpected: false,
+			name:      "NoDups - none - 1 entry",
+			checkFunc: check.Int64SliceNoDups,
+			val:       []int64{1},
 		},
 		{
-			name:        "NoDups - none",
-			checkFunc:   check.Int64SliceNoDups,
-			val:         []int64{1, 2, 3, 4, 5},
-			errExpected: false,
+			name:      "NoDups - none",
+			checkFunc: check.Int64SliceNoDups,
+			val:       []int64{1, 2, 3, 4, 5},
 		},
 		{
 			name:        "NoDups - has duplicates",
@@ -45,10 +42,9 @@ func TestInt64Slice(t *testing.T) {
 			},
 		},
 		{
-			name:        "Int64Check - LT - all good",
-			checkFunc:   check.Int64SliceInt64Check(check.Int64LT(10)),
-			val:         []int64{1, 2, 3, 3, 5},
-			errExpected: false,
+			name:      "Int64Check - LT - all good",
+			checkFunc: check.Int64SliceInt64Check(check.Int64LT(10)),
+			val:       []int64{1, 2, 3, 3, 5},
 		},
 		{
 			name:        "Int64Check - LT - all bad",
@@ -57,15 +53,14 @@ func TestInt64Slice(t *testing.T) {
 			errExpected: true,
 			errMustContain: []string{
 				"list entry:",
-				"does not satisfy the check: ",
+				"does not pass the test: ",
 				"greater than",
 			},
 		},
 		{
-			name:        "LenLT: 1 < 2",
-			checkFunc:   check.Int64SliceLenLT(2),
-			val:         []int64{1},
-			errExpected: false,
+			name:      "LenLT: 1 < 2",
+			checkFunc: check.Int64SliceLenLT(2),
+			val:       []int64{1},
 		},
 		{
 			name:        "LenLT: 1 !< 1",
@@ -88,10 +83,9 @@ func TestInt64Slice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenEQ: 1 == 1",
-			checkFunc:   check.Int64SliceLenEQ(1),
-			val:         []int64{1},
-			errExpected: false,
+			name:      "LenEQ: 1 == 1",
+			checkFunc: check.Int64SliceLenEQ(1),
+			val:       []int64{1},
 		},
 		{
 			name:        "LenEQ: 1 != 2",
@@ -114,10 +108,9 @@ func TestInt64Slice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenGT: 2 > 1",
-			checkFunc:   check.Int64SliceLenGT(1),
-			val:         []int64{1, 2},
-			errExpected: false,
+			name:      "LenGT: 2 > 1",
+			checkFunc: check.Int64SliceLenGT(1),
+			val:       []int64{1, 2},
 		},
 		{
 			name:        "LenGT: 1 !< 1",
@@ -140,22 +133,19 @@ func TestInt64Slice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenBetween: 1 <= 2 <= 3",
-			checkFunc:   check.Int64SliceLenBetween(1, 3),
-			val:         []int64{1, 2},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 2 <= 3",
+			checkFunc: check.Int64SliceLenBetween(1, 3),
+			val:       []int64{1, 2},
 		},
 		{
-			name:        "LenBetween: 1 <= 1 <= 3",
-			checkFunc:   check.Int64SliceLenBetween(1, 3),
-			val:         []int64{1},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 1 <= 3",
+			checkFunc: check.Int64SliceLenBetween(1, 3),
+			val:       []int64{1},
 		},
 		{
-			name:        "LenBetween: 1 <= 3 <= 3",
-			checkFunc:   check.Int64SliceLenBetween(1, 3),
-			val:         []int64{1, 2, 3},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 3 <= 3",
+			checkFunc: check.Int64SliceLenBetween(1, 3),
+			val:       []int64{1, 2, 3},
 		},
 		{
 			name:        "LenBetween: 1 !<= 0 <= 3",
@@ -186,8 +176,7 @@ func TestInt64Slice(t *testing.T) {
 				check.Int64SliceLenGT(3),
 				check.Int64SliceLenLT(3),
 			),
-			val:         []int64{1},
-			errExpected: false,
+			val: []int64{1},
 		},
 		{
 			name: "Or: 7 > 8, 7 < 6, 7 divides 60",
@@ -212,8 +201,7 @@ func TestInt64Slice(t *testing.T) {
 				check.Int64SliceLenGT(3),
 				check.Int64SliceLenLT(6),
 			),
-			val:         []int64{1, 2, 3, 4, 5},
-			errExpected: false,
+			val: []int64{1, 2, 3, 4, 5},
 		},
 		{
 			name: "And: 11 > 8, 11 < 10",
@@ -233,8 +221,7 @@ func TestInt64Slice(t *testing.T) {
 				check.Int64SliceLenLT(4),
 				"should not be shorter than 4 elements",
 			),
-			val:         []int64{1, 2, 3, 4, 5},
-			errExpected: false,
+			val: []int64{1, 2, 3, 4, 5},
 		},
 		{
 			name: "Not: 11 > 4",
@@ -280,10 +267,9 @@ func TestInt64SliceLenBetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "LenBetween: 1, 3",
-			lower:         1,
-			upper:         3,
-			panicExpected: false,
+			name:  "LenBetween: 1, 3",
+			lower: 1,
+			upper: 3,
 		},
 		{
 			name:          "LenBetween: 4, 3",

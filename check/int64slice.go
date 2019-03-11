@@ -27,7 +27,7 @@ func Int64SliceInt64Check(sc Int64) Int64Slice {
 		for i, s := range v {
 			if err := sc(s); err != nil {
 				return fmt.Errorf(
-					"list entry: %d (%d) does not satisfy the check: %s",
+					"list entry: %d (%d) does not pass the test: %s",
 					i, s, err)
 			}
 		}
@@ -135,7 +135,12 @@ func Int64SliceAnd(chkFuncs ...Int64Slice) Int64Slice {
 
 // Int64SliceNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the slice should not have. So, for
+// instance, if the function being Not'ed was
+//     check.Int64SliceLenGT(5)
+// then the errMsg parameter should be
+//     "a list with length greater than 5".
 func Int64SliceNot(c Int64Slice, errMsg string) Int64Slice {
 	return func(v []int64) error {
 		err := c(v)
@@ -143,6 +148,6 @@ func Int64SliceNot(c Int64Slice, errMsg string) Int64Slice {
 			return nil
 		}
 
-		return fmt.Errorf("%v %s", v, errMsg)
+		return fmt.Errorf("%v should not be %s", v, errMsg)
 	}
 }

@@ -84,7 +84,8 @@ func FilePermAnd(chkFuncs ...FilePerm) FilePerm {
 
 // FilePermNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the permissions should not have.
 func FilePermNot(c FilePerm, errMsg string) FilePerm {
 	return func(v os.FileMode) error {
 		err := c(v)
@@ -92,6 +93,7 @@ func FilePermNot(c FilePerm, errMsg string) FilePerm {
 			return nil
 		}
 
-		return fmt.Errorf("the permissions (%04o) %s", v.Perm(), errMsg)
+		return fmt.Errorf("the permissions (%04o) should not %s",
+			v.Perm(), errMsg)
 	}
 }

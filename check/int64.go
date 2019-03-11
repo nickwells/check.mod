@@ -145,7 +145,12 @@ func Int64And(chkFuncs ...Int64) Int64 {
 
 // Int64Not returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the number should not have. So, for
+// instance, if the function being Not'ed was
+//     check.Int64GT(5)
+// then the errMsg parameter should be
+//     "a number greater than 5".
 func Int64Not(c Int64, errMsg string) Int64 {
 	return func(v int64) error {
 		err := c(v)
@@ -153,6 +158,6 @@ func Int64Not(c Int64, errMsg string) Int64 {
 			return nil
 		}
 
-		return fmt.Errorf("%d %s", v, errMsg)
+		return fmt.Errorf("%d should not be %s", v, errMsg)
 	}
 }

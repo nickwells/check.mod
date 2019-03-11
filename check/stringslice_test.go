@@ -17,22 +17,19 @@ func TestStringSlice(t *testing.T) {
 		errMustContain []string
 	}{
 		{
-			name:        "NoDups - none - empty",
-			checkFunc:   check.StringSliceNoDups,
-			val:         []string{},
-			errExpected: false,
+			name:      "NoDups - none - empty",
+			checkFunc: check.StringSliceNoDups,
+			val:       []string{},
 		},
 		{
-			name:        "NoDups - none - 1 entry",
-			checkFunc:   check.StringSliceNoDups,
-			val:         []string{"a"},
-			errExpected: false,
+			name:      "NoDups - none - 1 entry",
+			checkFunc: check.StringSliceNoDups,
+			val:       []string{"a"},
 		},
 		{
-			name:        "NoDups - none",
-			checkFunc:   check.StringSliceNoDups,
-			val:         []string{"a", "b", "c", "d", "e"},
-			errExpected: false,
+			name:      "NoDups - none",
+			checkFunc: check.StringSliceNoDups,
+			val:       []string{"a", "b", "c", "d", "e"},
 		},
 		{
 			name:        "NoDups - has duplicates",
@@ -45,10 +42,9 @@ func TestStringSlice(t *testing.T) {
 			},
 		},
 		{
-			name:        "StringCheck - LT - all good",
-			checkFunc:   check.StringSliceStringCheck(check.StringLenLT(10)),
-			val:         []string{"a", "b", "c", "c", "e"},
-			errExpected: false,
+			name:      "StringCheck - LT - all good",
+			checkFunc: check.StringSliceStringCheck(check.StringLenLT(10)),
+			val:       []string{"a", "b", "c", "c", "e"},
 		},
 		{
 			name:        "StringCheck - LT - all bad",
@@ -57,15 +53,14 @@ func TestStringSlice(t *testing.T) {
 			errExpected: true,
 			errMustContain: []string{
 				"list entry:",
-				"does not satisfy the check: ",
+				"does not pass the test: ",
 				"greater than",
 			},
 		},
 		{
-			name:        "LenLT: 1 < 2",
-			checkFunc:   check.StringSliceLenLT(2),
-			val:         []string{"a"},
-			errExpected: false,
+			name:      "LenLT: 1 < 2",
+			checkFunc: check.StringSliceLenLT(2),
+			val:       []string{"a"},
 		},
 		{
 			name:        "LenLT: 1 !< 1",
@@ -88,10 +83,9 @@ func TestStringSlice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenEQ: 1 == 1",
-			checkFunc:   check.StringSliceLenEQ(1),
-			val:         []string{"a"},
-			errExpected: false,
+			name:      "LenEQ: 1 == 1",
+			checkFunc: check.StringSliceLenEQ(1),
+			val:       []string{"a"},
 		},
 		{
 			name:        "LenEQ: 1 != 2",
@@ -114,10 +108,9 @@ func TestStringSlice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenGT: 2 > 1",
-			checkFunc:   check.StringSliceLenGT(1),
-			val:         []string{"a", "b"},
-			errExpected: false,
+			name:      "LenGT: 2 > 1",
+			checkFunc: check.StringSliceLenGT(1),
+			val:       []string{"a", "b"},
 		},
 		{
 			name:        "LenGT: 1 !< 1",
@@ -140,22 +133,19 @@ func TestStringSlice(t *testing.T) {
 			},
 		},
 		{
-			name:        "LenBetween: 1 <= 2 <= 3",
-			checkFunc:   check.StringSliceLenBetween(1, 3),
-			val:         []string{"a", "b"},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 2 <= 3",
+			checkFunc: check.StringSliceLenBetween(1, 3),
+			val:       []string{"a", "b"},
 		},
 		{
-			name:        "LenBetween: 1 <= 1 <= 3",
-			checkFunc:   check.StringSliceLenBetween(1, 3),
-			val:         []string{"a"},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 1 <= 3",
+			checkFunc: check.StringSliceLenBetween(1, 3),
+			val:       []string{"a"},
 		},
 		{
-			name:        "LenBetween: 1 <= 3 <= 3",
-			checkFunc:   check.StringSliceLenBetween(1, 3),
-			val:         []string{"a", "b", "c"},
-			errExpected: false,
+			name:      "LenBetween: 1 <= 3 <= 3",
+			checkFunc: check.StringSliceLenBetween(1, 3),
+			val:       []string{"a", "b", "c"},
 		},
 		{
 			name:        "LenBetween: 1 !<= 0 <= 3",
@@ -186,8 +176,7 @@ func TestStringSlice(t *testing.T) {
 				check.StringSliceLenGT(3),
 				check.StringSliceLenLT(3),
 			),
-			val:         []string{"a"},
-			errExpected: false,
+			val: []string{"a"},
 		},
 		{
 			name: "Or: 7 > 8, 7 < 6, 7 divides 60",
@@ -212,8 +201,7 @@ func TestStringSlice(t *testing.T) {
 				check.StringSliceLenGT(3),
 				check.StringSliceLenLT(6),
 			),
-			val:         []string{"a", "b", "c", "d", "e"},
-			errExpected: false,
+			val: []string{"a", "b", "c", "d", "e"},
 		},
 		{
 			name: "And: 11 > 8, 11 < 10",
@@ -280,10 +268,9 @@ func TestStringSliceLenBetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "LenBetween: 1, 3",
-			lower:         1,
-			upper:         3,
-			panicExpected: false,
+			name:  "LenBetween: 1, 3",
+			lower: 1,
+			upper: 3,
 		},
 		{
 			name:          "LenBetween: 4, 3",

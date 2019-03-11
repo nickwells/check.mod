@@ -219,10 +219,9 @@ func TestFloat64BetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "Between: 1.0, 3.0",
-			lower:         1.0,
-			upper:         3.0,
-			panicExpected: false,
+			name:  "Between: 1.0, 3.0",
+			lower: 1.0,
+			upper: 3.0,
 		},
 		{
 			name:          "Between: 4.0, 3.0",

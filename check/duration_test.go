@@ -220,10 +220,9 @@ func TestDurationBetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "Between: 1, 3",
-			lower:         1 * time.Second,
-			upper:         3 * time.Second,
-			panicExpected: false,
+			name:  "Between: 1, 3",
+			lower: 1 * time.Second,
+			upper: 3 * time.Second,
 		},
 		{
 			name:          "Between: 4, 3",

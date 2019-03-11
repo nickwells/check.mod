@@ -10,6 +10,9 @@ import (
 )
 
 func TestString(t *testing.T) {
+	regexpStr := "^a[a-z]+d$"
+	regexpVal := regexp.MustCompile(regexpStr)
+	regexpDesc := "3 or more letters starting with an a and ending with d"
 	testCases := []struct {
 		name           string
 		checkFunc      check.String
@@ -119,97 +122,16 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			name: "Matches - good",
-			checkFunc: check.StringMatchesPattern(
-				regexp.MustCompile("^a[a-z]+d$"),
-				"3 or more letters starting with an a and ending with d"),
-			val: "abcd",
+			name:      "Matches - good",
+			checkFunc: check.StringMatchesPattern(regexpVal, regexpDesc),
+			val:       "abcd",
 		},
 		{
-			name: "Matches - bad",
-			checkFunc: check.StringMatchesPattern(
-				regexp.MustCompile("^a[a-z]+d$"),
-				"3 or more letters starting with an a and ending with d"),
-			val:         "xxx",
-			errExpected: true,
-			errMustContain: []string{
-				"does not match the pattern",
-			},
-		},
-		{
-			name:        "LenGT: 1 !< 1",
-			checkFunc:   check.StringLenGT(1),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
-				"the length of the value",
-				"must be greater than",
-			},
-		},
-		{
-			name:        "LenGT: 2 !< 1",
-			checkFunc:   check.StringLenGT(2),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
-				"the length of the value",
-				"must be greater than",
-			},
-		},
-		{
-			name:      "Between: 1 <= 2 <= 3",
-			checkFunc: check.StringLenBetween(1, 3),
-			val:       "ab",
-		},
-		{
-			name:      "Between: 1 <= 1 <= 3",
-			checkFunc: check.StringLenBetween(1, 3),
-			val:       "a",
-		},
-		{
-			name:      "Between: 1 <= 3 <= 3",
-			checkFunc: check.StringLenBetween(1, 3),
-			val:       "abc",
-		},
-		{
-			name:        "Between: 1 !<= 0 <= 3",
-			checkFunc:   check.StringLenBetween(1, 3),
-			val:         "",
-			errExpected: true,
-			errMustContain: []string{
-				"the length of the value",
-				"must be between",
-				" - too short",
-			},
-		},
-		{
-			name:        "Between: 1 <= 4 !<= 3",
-			checkFunc:   check.StringLenBetween(1, 3),
-			val:         "abcd",
-			errExpected: true,
-			errMustContain: []string{
-				"the length of the value",
-				"must be between",
-				" - too long",
-			},
-		},
-		{
-			name: "Matches - good",
-			checkFunc: check.StringMatchesPattern(
-				regexp.MustCompile("^a[a-z]+d$"),
-				"3 or more letters starting with an a and ending with d"),
-			val: "abcd",
-		},
-		{
-			name: "Matches - bad",
-			checkFunc: check.StringMatchesPattern(
-				regexp.MustCompile("^a[a-z]+d$"),
-				"3 or more letters starting with an a and ending with d"),
-			val:         "xxx",
-			errExpected: true,
-			errMustContain: []string{
-				"does not match the pattern",
-			},
+			name:           "Matches - bad",
+			checkFunc:      check.StringMatchesPattern(regexpVal, regexpDesc),
+			val:            "xxx",
+			errExpected:    true,
+			errMustContain: []string{"xxx should be:", regexpDesc},
 		},
 		{
 			name:      "Equals - good",
@@ -226,13 +148,23 @@ func TestString(t *testing.T) {
 			},
 		},
 		{
-			name:        "HasPrefix - bad - only partly",
-			checkFunc:   check.StringHasPrefix("abc"),
-			val:         "abxxxx",
-			errExpected: true,
-			errMustContain: []string{
-				"should have 'abc' as a prefix",
-			},
+			name:      "HasPrefix - good",
+			checkFunc: check.StringHasPrefix("abc"),
+			val:       "abcx",
+		},
+		{
+			name:           "HasPrefix - bad - completely different",
+			checkFunc:      check.StringHasPrefix("abc"),
+			val:            "xxxx",
+			errExpected:    true,
+			errMustContain: []string{"should have 'abc' as a prefix"},
+		},
+		{
+			name:           "HasPrefix - bad - only partly",
+			checkFunc:      check.StringHasPrefix("abc"),
+			val:            "abxxxx",
+			errExpected:    true,
+			errMustContain: []string{"should have 'abc' as a prefix"},
 		},
 		{
 			name:      "HasSuffix - good",
@@ -240,22 +172,18 @@ func TestString(t *testing.T) {
 			val:       "xabc",
 		},
 		{
-			name:        "HasSuffix - bad - completely different",
-			checkFunc:   check.StringHasSuffix("abc"),
-			val:         "xxxx",
-			errExpected: true,
-			errMustContain: []string{
-				"should have 'abc' as a suffix",
-			},
+			name:           "HasSuffix - bad - completely different",
+			checkFunc:      check.StringHasSuffix("abc"),
+			val:            "xxxx",
+			errExpected:    true,
+			errMustContain: []string{"should have 'abc' as a suffix"},
 		},
 		{
-			name:        "HasSuffix - bad - only partly",
-			checkFunc:   check.StringHasSuffix("abc"),
-			val:         "xxxxab",
-			errExpected: true,
-			errMustContain: []string{
-				"should have 'abc' as a suffix",
-			},
+			name:           "HasSuffix - bad - only partly",
+			checkFunc:      check.StringHasSuffix("abc"),
+			val:            "xxxxab",
+			errExpected:    true,
+			errMustContain: []string{"should have 'abc' as a suffix"},
 		},
 		{
 			name: "Or: len(\"a\") > 2 , len(\"a\") > 3, len(\"a\") < 3",
@@ -354,10 +282,9 @@ func TestStringLenBetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "Between: 1, 3",
-			lower:         1,
-			upper:         3,
-			panicExpected: false,
+			name:  "Between: 1, 3",
+			lower: 1,
+			upper: 3,
 		},
 		{
 			name:          "Between: 4, 3",

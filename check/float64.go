@@ -112,7 +112,12 @@ func Float64And(chkFuncs ...Float64) Float64 {
 
 // Float64Not returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the value should not have. So, for
+// instance, if the function being Not'ed was
+//     check.Float64GT(5.0)
+// then the errMsg parameter should be
+//     "greater than 5.0".
 func Float64Not(c Float64, errMsg string) Float64 {
 	return func(v float64) error {
 		err := c(v)
@@ -120,6 +125,6 @@ func Float64Not(c Float64, errMsg string) Float64 {
 			return nil
 		}
 
-		return fmt.Errorf("%f %s", v, errMsg)
+		return fmt.Errorf("%f should not be %s", v, errMsg)
 	}
 }

@@ -116,7 +116,12 @@ func DurationAnd(chkFuncs ...Duration) Duration {
 
 // DurationNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the duration that fails
+// to appear after the duration that fails. This error text should be a string
+// that describes the quality that the duration should not have. So, for
+// instance, if the function being Not'ed was
+//     check.DurationGE(5)
+// then the errMsg parameter should be
+//     "a duration greater than or equal to  5".
 func DurationNot(c Duration, errMsg string) Duration {
 	return func(d time.Duration) error {
 		err := c(d)
@@ -124,6 +129,6 @@ func DurationNot(c Duration, errMsg string) Duration {
 			return nil
 		}
 
-		return fmt.Errorf("'%s' %s", d, errMsg)
+		return fmt.Errorf("'%s' should not be %s", d, errMsg)
 	}
 }

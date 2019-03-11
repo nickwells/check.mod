@@ -134,7 +134,7 @@ func TestFilePerm(t *testing.T) {
 			fileMode: 07666,
 			cf: check.FilePermNot(
 				check.FilePermHasAll(0200),
-				"should not have owner write permission set",
+				"have owner write permission set",
 			),
 			errExpected: true,
 			errMustContain: []string{

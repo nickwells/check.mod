@@ -113,7 +113,12 @@ func TimeAnd(chkFuncs ...Time) Time {
 
 // TimeNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the value should not have. So, for
+// instance, if the function being Not'ed was
+//     check.TimeIsOnDOW(time.Monday)
+// then the errMsg parameter should be
+//     "on a Monday.
 func TimeNot(c Time, errMsg string) Time {
 	return func(v time.Time) error {
 		err := c(v)
@@ -121,6 +126,6 @@ func TimeNot(c Time, errMsg string) Time {
 			return nil
 		}
 
-		return fmt.Errorf("'%s' %s", v, errMsg)
+		return fmt.Errorf("'%s' should not be %s", v, errMsg)
 	}
 }

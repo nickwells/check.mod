@@ -257,10 +257,9 @@ func TestInt64BetweenPanic(t *testing.T) {
 		panicMustContain []string
 	}{
 		{
-			name:          "Between: 1, 3",
-			lower:         1,
-			upper:         3,
-			panicExpected: false,
+			name:  "Between: 1, 3",
+			lower: 1,
+			upper: 3,
 		},
 		{
 			name:          "Between: 4, 3",

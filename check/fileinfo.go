@@ -171,7 +171,8 @@ func FileInfoAnd(chkFuncs ...FileInfo) FileInfo {
 
 // FileInfoNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the value that fails
+// to appear after the value that fails. This error text should be a string
+// that describes the quality that the file info should not have.
 func FileInfoNot(c FileInfo, errMsg string) FileInfo {
 	return func(v os.FileInfo) error {
 		err := c(v)
@@ -179,6 +180,6 @@ func FileInfoNot(c FileInfo, errMsg string) FileInfo {
 			return nil
 		}
 
-		return fmt.Errorf("'%s' %s", v.Name(), errMsg)
+		return fmt.Errorf("'%s' should not %s", v.Name(), errMsg)
 	}
 }

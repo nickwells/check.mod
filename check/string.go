@@ -74,12 +74,16 @@ func StringLenBetween(low, high int) String {
 	}
 }
 
-// StringMatchesPattern returns a function that checks that the
-// string matches the supplied regexp
+// StringMatchesPattern returns a function that checks that the string
+// matches the supplied regexp. The regexp description should be a
+// description of the string that will match the regexp. The error returned
+// will say that the string "should be: " followed by this description. So,
+// for instance, if the regexp matches a string of numbers then the
+// description could be 'numeric'.
 func StringMatchesPattern(re *regexp.Regexp, reDesc string) String {
 	return func(v string) error {
 		if !re.MatchString(v) {
-			return fmt.Errorf("%s does not match the pattern: %s",
+			return fmt.Errorf("%s should be: %s",
 				v, reDesc)
 		}
 		return nil
@@ -158,7 +162,12 @@ func StringAnd(chkFuncs ...String) String {
 
 // StringNot returns a function that will check that the value, when passed
 // to the check func, does not pass it. You must also supply the error text
-// to appear after the string that fails
+// to appear after the string that fails. This error text should be a string
+// that describes the quality that the string should not have. So, for
+// instance, if the function being Not'ed was
+//     check.StringHasPrefix("Hello")
+// then the errMsg parameter should be
+//     "a string with prefix 'Hello'".
 func StringNot(c String, errMsg string) String {
 	return func(s string) error {
 		err := c(s)
@@ -166,6 +175,6 @@ func StringNot(c String, errMsg string) String {
 			return nil
 		}
 
-		return fmt.Errorf("'%s' %s", s, errMsg)
+		return fmt.Errorf("'%s' should not be %s", s, errMsg)
 	}
 }
