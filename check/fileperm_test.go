@@ -1,7 +1,6 @@
 package check_test
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -11,95 +10,77 @@ import (
 
 func TestFilePerm(t *testing.T) {
 	testCases := []struct {
-		name           string
-		fileMode       os.FileMode
-		cf             check.FilePerm
-		errExpected    bool
-		errMustContain []string
+		testhelper.ID
+		testhelper.ExpErr
+		fileMode os.FileMode
+		cf       check.FilePerm
 	}{
 		{
-			name:     "EQ - good",
+			ID:       testhelper.MkID("EQ - good"),
 			fileMode: 07777,
 			cf:       check.FilePermEQ(0777),
 		},
 		{
-			name:        "EQ - bad",
-			fileMode:    07777,
-			cf:          check.FilePermEQ(0770),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0777) should be equal to 0770",
-			},
+			ID:       testhelper.MkID("EQ - bad"),
+			fileMode: 07777,
+			cf:       check.FilePermEQ(0770),
+			ExpErr: testhelper.MkExpErr(
+				"the permissions (0777) should be equal to 0770"),
 		},
 		{
-			name:     "HasAll - good",
+			ID:       testhelper.MkID("HasAll - good"),
 			fileMode: 07777,
 			cf:       check.FilePermHasAll(0111),
 		},
 		{
-			name:        "HasAll - bad - has none",
-			fileMode:    07666,
-			cf:          check.FilePermHasAll(0111),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should have all of the permissions in 0111",
-			},
+			ID:       testhelper.MkID("HasAll - bad - has none"),
+			fileMode: 07666,
+			cf:       check.FilePermHasAll(0111),
+			ExpErr: testhelper.MkExpErr("the permissions (0666)" +
+				" should have all of the permissions in 0111"),
 		},
 		{
-			name:        "HasAll - bad - has some",
-			fileMode:    07666,
-			cf:          check.FilePermHasAll(0221),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should have all of the permissions in 0221",
-			},
+			ID:       testhelper.MkID("HasAll - bad - has some"),
+			fileMode: 07666,
+			cf:       check.FilePermHasAll(0221),
+			ExpErr: testhelper.MkExpErr("the permissions (0666)" +
+				" should have all of the permissions in 0221"),
 		},
 		{
-			name:     "HasNone - good",
+			ID:       testhelper.MkID("HasNone - good"),
 			fileMode: 07666,
 			cf:       check.FilePermHasNone(0111),
 		},
 		{
-			name:        "HasNone - bad - has all",
-			fileMode:    07777,
-			cf:          check.FilePermHasNone(0111),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0777)" +
-					" should have none of the permissions in 0111",
-			},
+			ID:       testhelper.MkID("HasNone - bad - has all"),
+			fileMode: 07777,
+			cf:       check.FilePermHasNone(0111),
+			ExpErr: testhelper.MkExpErr("the permissions (0777)" +
+				" should have none of the permissions in 0111"),
 		},
 		{
-			name:        "HasNone - bad - has some",
-			fileMode:    07666,
-			cf:          check.FilePermHasNone(0211),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should have none of the permissions in 0211",
-			},
+			ID:       testhelper.MkID("HasNone - bad - has some"),
+			fileMode: 07666,
+			cf:       check.FilePermHasNone(0211),
+			ExpErr: testhelper.MkExpErr("the permissions (0666)" +
+				" should have none of the permissions in 0211"),
 		},
 		{
-			name:     "Or - bad - none pass",
+			ID:       testhelper.MkID("Or - bad - none pass"),
 			fileMode: 07666,
 			cf: check.FilePermOr(
 				check.FilePermHasNone(0211),
 				check.FilePermHasNone(0121),
 				check.FilePermHasNone(0112),
 			),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should have none of the permissions in 0211",
+			ExpErr: testhelper.MkExpErr("the permissions (0666)"+
+				" should have none of the permissions in 0211",
 				" should have none of the permissions in 0121",
 				" should have none of the permissions in 0112",
-				" or ",
-			},
+				" or "),
 		},
 		{
-			name:     "Or - good - one passes",
+			ID:       testhelper.MkID("Or - good - one passes"),
 			fileMode: 07666,
 			cf: check.FilePermOr(
 				check.FilePermHasNone(0211),
@@ -108,20 +89,17 @@ func TestFilePerm(t *testing.T) {
 			),
 		},
 		{
-			name:     "And - bad - one fails",
+			ID:       testhelper.MkID("And - bad - one fails"),
 			fileMode: 07666,
 			cf: check.FilePermAnd(
 				check.FilePermHasNone(0211),
 				check.FilePermHasNone(0111),
 			),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should have none of the permissions in 0211",
-			},
+			ExpErr: testhelper.MkExpErr("the permissions (0666)" +
+				" should have none of the permissions in 0211"),
 		},
 		{
-			name:     "And - good - all pass",
+			ID:       testhelper.MkID("And - good - all pass"),
 			fileMode: 07666,
 			cf: check.FilePermAnd(
 				check.FilePermHasNone(01),
@@ -130,20 +108,17 @@ func TestFilePerm(t *testing.T) {
 			),
 		},
 		{
-			name:     "Not - bad - one fails",
+			ID:       testhelper.MkID("Not - bad - one fails"),
 			fileMode: 07666,
 			cf: check.FilePermNot(
 				check.FilePermHasAll(0200),
 				"have owner write permission set",
 			),
-			errExpected: true,
-			errMustContain: []string{
-				"the permissions (0666)" +
-					" should not have owner write permission set",
-			},
+			ExpErr: testhelper.MkExpErr("the permissions (0666)" +
+				" should not have owner write permission set"),
 		},
 		{
-			name:     "Not - good",
+			ID:       testhelper.MkID("Not - good"),
 			fileMode: 07666,
 			cf: check.FilePermNot(
 				check.FilePermHasAll(01),
@@ -152,10 +127,8 @@ func TestFilePerm(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		err := tc.cf(tc.fileMode)
-		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)
+		testhelper.CheckExpErr(t, err, tc)
 	}
 }

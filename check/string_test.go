@@ -1,7 +1,6 @@
 package check_test
 
 import (
-	"fmt"
 	"regexp"
 	"testing"
 
@@ -14,179 +13,156 @@ func TestString(t *testing.T) {
 	regexpVal := regexp.MustCompile(regexpStr)
 	regexpDesc := "3 or more letters starting with an a and ending with d"
 	testCases := []struct {
-		name           string
-		checkFunc      check.String
-		val            string
-		errExpected    bool
-		errMustContain []string
+		testhelper.ID
+		testhelper.ExpErr
+		checkFunc check.String
+		val       string
 	}{
 		{
-			name:      "LenEQ: 2 == 2",
+			ID:        testhelper.MkID("LenEQ: 2 == 2"),
 			checkFunc: check.StringLenEQ(2),
 			val:       "ab",
 		},
 		{
-			name:        "LenEQ: 1 != 2",
-			checkFunc:   check.StringLenEQ(2),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenEQ: 1 != 2"),
+			checkFunc: check.StringLenEQ(2),
+			val:       "a",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
-				"must equal",
-			},
+				"must equal"),
 		}, {
-			name:      "LenLT: 1 < 2",
+			ID:        testhelper.MkID("LenLT: 1 < 2"),
 			checkFunc: check.StringLenLT(2),
 			val:       "a",
 		},
 		{
-			name:        "LenLT: 1 !< 1",
-			checkFunc:   check.StringLenLT(1),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenLT: 1 !< 1"),
+			checkFunc: check.StringLenLT(1),
+			val:       "a",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
-				"must be less than",
-			},
+				"must be less than"),
 		},
 		{
-			name:        "LenLT: 2 !< 1",
-			checkFunc:   check.StringLenLT(1),
-			val:         "ab",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenLT: 2 !< 1"),
+			checkFunc: check.StringLenLT(1),
+			val:       "ab",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
-				"must be less than",
-			},
+				"must be less than"),
 		},
 		{
-			name:      "LenGT: 2 > 1",
+			ID:        testhelper.MkID("LenGT: 2 > 1"),
 			checkFunc: check.StringLenGT(1),
 			val:       "ab",
 		},
 		{
-			name:        "LenGT: 1 !< 1",
-			checkFunc:   check.StringLenGT(1),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenGT: 1 !< 1"),
+			checkFunc: check.StringLenGT(1),
+			val:       "a",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
-				"must be greater than",
-			},
+				"must be greater than"),
 		},
 		{
-			name:        "LenGT: 2 !< 1",
-			checkFunc:   check.StringLenGT(2),
-			val:         "a",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenGT: 2 !< 1"),
+			checkFunc: check.StringLenGT(2),
+			val:       "a",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
-				"must be greater than",
-			},
+				"must be greater than"),
 		},
 		{
-			name:      "Between: 1 <= 2 <= 3",
+			ID:        testhelper.MkID("Between: 1 <= 2 <= 3"),
 			checkFunc: check.StringLenBetween(1, 3),
 			val:       "ab",
 		},
 		{
-			name:      "Between: 1 <= 1 <= 3",
+			ID:        testhelper.MkID("Between: 1 <= 1 <= 3"),
 			checkFunc: check.StringLenBetween(1, 3),
 			val:       "a",
 		},
 		{
-			name:      "Between: 1 <= 3 <= 3",
+			ID:        testhelper.MkID("Between: 1 <= 3 <= 3"),
 			checkFunc: check.StringLenBetween(1, 3),
 			val:       "abc",
 		},
 		{
-			name:        "Between: 1 !<= 0 <= 3",
-			checkFunc:   check.StringLenBetween(1, 3),
-			val:         "",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("Between: 1 !<= 0 <= 3"),
+			checkFunc: check.StringLenBetween(1, 3),
+			val:       "",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
 				"must be between",
-				" - too short",
-			},
+				" - too short"),
 		},
 		{
-			name:        "Between: 1 <= 4 !<= 3",
-			checkFunc:   check.StringLenBetween(1, 3),
-			val:         "abcd",
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("Between: 1 <= 4 !<= 3"),
+			checkFunc: check.StringLenBetween(1, 3),
+			val:       "abcd",
+			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
 				"must be between",
-				" - too long",
-			},
+				" - too long"),
 		},
 		{
-			name:      "Matches - good",
+			ID:        testhelper.MkID("Matches - good"),
 			checkFunc: check.StringMatchesPattern(regexpVal, regexpDesc),
 			val:       "abcd",
 		},
 		{
-			name:           "Matches - bad",
-			checkFunc:      check.StringMatchesPattern(regexpVal, regexpDesc),
-			val:            "xxx",
-			errExpected:    true,
-			errMustContain: []string{"xxx should be:", regexpDesc},
+			ID:        testhelper.MkID("Matches - bad"),
+			checkFunc: check.StringMatchesPattern(regexpVal, regexpDesc),
+			val:       "xxx",
+			ExpErr:    testhelper.MkExpErr("'xxx' should be:", regexpDesc),
 		},
 		{
-			name:      "Equals - good",
+			ID:        testhelper.MkID("Equals - good"),
 			checkFunc: check.StringEquals("abc"),
 			val:       "abc",
 		},
 		{
-			name:        "Equals - bad - different",
-			checkFunc:   check.StringEquals("abc"),
-			val:         "xxxx",
-			errExpected: true,
-			errMustContain: []string{
-				"should equal 'abc'",
-			},
+			ID:        testhelper.MkID("Equals - bad - different"),
+			checkFunc: check.StringEquals("abc"),
+			val:       "xxxx",
+			ExpErr:    testhelper.MkExpErr("should equal 'abc'"),
 		},
 		{
-			name:      "HasPrefix - good",
+			ID:        testhelper.MkID("HasPrefix - good"),
 			checkFunc: check.StringHasPrefix("abc"),
 			val:       "abcx",
 		},
 		{
-			name:           "HasPrefix - bad - completely different",
-			checkFunc:      check.StringHasPrefix("abc"),
-			val:            "xxxx",
-			errExpected:    true,
-			errMustContain: []string{"should have 'abc' as a prefix"},
+			ID:        testhelper.MkID("HasPrefix - bad - completely different"),
+			checkFunc: check.StringHasPrefix("abc"),
+			val:       "xxxx",
+			ExpErr:    testhelper.MkExpErr("should have 'abc' as a prefix"),
 		},
 		{
-			name:           "HasPrefix - bad - only partly",
-			checkFunc:      check.StringHasPrefix("abc"),
-			val:            "abxxxx",
-			errExpected:    true,
-			errMustContain: []string{"should have 'abc' as a prefix"},
+			ID:        testhelper.MkID("HasPrefix - bad - only partly"),
+			checkFunc: check.StringHasPrefix("abc"),
+			val:       "abxxxx",
+			ExpErr:    testhelper.MkExpErr("should have 'abc' as a prefix"),
 		},
 		{
-			name:      "HasSuffix - good",
+			ID:        testhelper.MkID("HasSuffix - good"),
 			checkFunc: check.StringHasSuffix("abc"),
 			val:       "xabc",
 		},
 		{
-			name:           "HasSuffix - bad - completely different",
-			checkFunc:      check.StringHasSuffix("abc"),
-			val:            "xxxx",
-			errExpected:    true,
-			errMustContain: []string{"should have 'abc' as a suffix"},
+			ID:        testhelper.MkID("HasSuffix - bad - completely different"),
+			checkFunc: check.StringHasSuffix("abc"),
+			val:       "xxxx",
+			ExpErr:    testhelper.MkExpErr("should have 'abc' as a suffix"),
 		},
 		{
-			name:           "HasSuffix - bad - only partly",
-			checkFunc:      check.StringHasSuffix("abc"),
-			val:            "xxxxab",
-			errExpected:    true,
-			errMustContain: []string{"should have 'abc' as a suffix"},
+			ID:        testhelper.MkID("HasSuffix - bad - only partly"),
+			checkFunc: check.StringHasSuffix("abc"),
+			val:       "xxxxab",
+			ExpErr:    testhelper.MkExpErr("should have 'abc' as a suffix"),
 		},
 		{
-			name: "Or: len(\"a\") > 2 , len(\"a\") > 3, len(\"a\") < 3",
+			ID: testhelper.MkID(") < 3"),
 			checkFunc: check.StringOr(
 				check.StringLenGT(2),
 				check.StringLenGT(3),
@@ -195,22 +171,20 @@ func TestString(t *testing.T) {
 			val: "a",
 		},
 		{
-			name: "Or: len(\"ab\") > 3, len(\"ab\") < 1",
+			ID: testhelper.MkID(") < 1"),
 			checkFunc: check.StringOr(
 				check.StringLenGT(3),
 				check.StringLenLT(1),
 			),
-			val:         "ab",
-			errExpected: true,
-			errMustContain: []string{
+			val: "ab",
+			ExpErr: testhelper.MkExpErr(
 				"must be greater than",
 				"must be less than",
-				" or ",
-			},
+				" or "),
 		},
 		{
-			name: "And: len(\"abcd\") > 2 ," +
-				" len(\"abcd\") > 3, len(\"abcd\") < 6",
+			ID: testhelper.MkID("And: len(\"abcd\") > 2 ," +
+				" len(\"abcd\") > 3, len(\"abcd\") < 6"),
 			checkFunc: check.StringAnd(
 				check.StringLenGT(2),
 				check.StringLenGT(3),
@@ -219,19 +193,16 @@ func TestString(t *testing.T) {
 			val: "abcd",
 		},
 		{
-			name: "And: len(\"abcd\") > 1, len(\"abcd\") < 3",
+			ID: testhelper.MkID(") < 3"),
 			checkFunc: check.StringAnd(
 				check.StringLenGT(1),
 				check.StringLenLT(3),
 			),
-			val:         "abcd",
-			errExpected: true,
-			errMustContain: []string{
-				"must be less than",
-			},
+			val:    "abcd",
+			ExpErr: testhelper.MkExpErr("must be less than"),
 		},
 		{
-			name: "Not: len(\"abcd\") > 6",
+			ID: testhelper.MkID(") > 6"),
 			checkFunc: check.StringNot(
 				check.StringLenGT(6),
 				"should not be longer than 6 characters",
@@ -239,24 +210,20 @@ func TestString(t *testing.T) {
 			val: "abcd",
 		},
 		{
-			name: "Not: len(\"abcd\") > 3",
+			ID: testhelper.MkID(") > 3"),
 			checkFunc: check.StringNot(
 				check.StringLenGT(3),
 				"should not be longer than 3 characters",
 			),
-			val:         "abcd",
-			errExpected: true,
-			errMustContain: []string{
-				"should not be longer than 3 characters",
-			},
+			val: "abcd",
+			ExpErr: testhelper.MkExpErr(
+				"should not be longer than 3 characters"),
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		err := tc.checkFunc(tc.val)
-		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)
+		testhelper.CheckExpErr(t, err, tc)
 	}
 
 }
@@ -275,37 +242,31 @@ func panicSafeTestStringLenBetween(t *testing.T, lowerVal, upperVal int) (panick
 
 func TestStringLenBetweenPanic(t *testing.T) {
 	testCases := []struct {
-		name             string
-		lower            int
-		upper            int
-		panicExpected    bool
-		panicMustContain []string
+		testhelper.ID
+		testhelper.ExpPanic
+		lower int
+		upper int
 	}{
 		{
-			name:  "Between: 1, 3",
+			ID:    testhelper.MkID("Between: 1, 3"),
 			lower: 1,
 			upper: 3,
 		},
 		{
-			name:          "Between: 4, 3",
-			lower:         4,
-			upper:         3,
-			panicExpected: true,
-			panicMustContain: []string{
+			ID:    testhelper.MkID("Between: 4, 3"),
+			lower: 4,
+			upper: 3,
+			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to StringLenBetween: ",
 				"the lower limit",
 				"should be less than the upper limit",
-			},
+			),
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+	for _, tc := range testCases {
 		panicked, panicVal := panicSafeTestStringLenBetween(
 			t, tc.lower, tc.upper)
-		testhelper.PanicCheckString(t, tcID,
-			panicked, tc.panicExpected,
-			panicVal, tc.panicMustContain)
+		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
-
 }

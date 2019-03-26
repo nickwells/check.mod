@@ -83,7 +83,7 @@ func StringLenBetween(low, high int) String {
 func StringMatchesPattern(re *regexp.Regexp, reDesc string) String {
 	return func(v string) error {
 		if !re.MatchString(v) {
-			return fmt.Errorf("%s should be: %s",
+			return fmt.Errorf("'%s' should be: %s",
 				v, reDesc)
 		}
 		return nil
@@ -96,7 +96,7 @@ func StringMatchesPattern(re *regexp.Regexp, reDesc string) String {
 func StringEquals(s string) String {
 	return func(v string) error {
 		if v != s {
-			return fmt.Errorf("%s should equal '%s'", v, s)
+			return fmt.Errorf("'%s' should equal '%s'", v, s)
 		}
 		return nil
 	}
@@ -107,7 +107,7 @@ func StringEquals(s string) String {
 func StringHasPrefix(prefix string) String {
 	return func(v string) error {
 		if !strings.HasPrefix(v, prefix) {
-			return fmt.Errorf("%s should have '%s' as a prefix",
+			return fmt.Errorf("'%s' should have '%s' as a prefix",
 				v, prefix)
 		}
 		return nil
@@ -119,7 +119,7 @@ func StringHasPrefix(prefix string) String {
 func StringHasSuffix(suffix string) String {
 	return func(v string) error {
 		if !strings.HasSuffix(v, suffix) {
-			return fmt.Errorf("%s should have '%s' as a suffix",
+			return fmt.Errorf("'%s' should have '%s' as a suffix",
 				v, suffix)
 		}
 		return nil

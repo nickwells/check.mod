@@ -110,7 +110,7 @@ func StringSliceNoDups(v []string) error {
 	for i, s := range v {
 		if dup, ok := dupMap[s]; ok {
 			return fmt.Errorf(
-				"list entries: %d and %d are duplicates, both are: %s",
+				"list entries: %d and %d are duplicates, both are: '%s'",
 				dup, i, s)
 		}
 		dupMap[s] = i

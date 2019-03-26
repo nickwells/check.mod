@@ -1,7 +1,6 @@
 package check_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/nickwells/check.mod/check"
@@ -10,167 +9,146 @@ import (
 
 func TestStringSlice(t *testing.T) {
 	testCases := []struct {
-		name           string
-		checkFunc      check.StringSlice
-		val            []string
-		errExpected    bool
-		errMustContain []string
+		testhelper.ID
+		testhelper.ExpErr
+		checkFunc check.StringSlice
+		val       []string
 	}{
 		{
-			name:      "NoDups - none - empty",
+			ID:        testhelper.MkID("NoDups - none - empty"),
 			checkFunc: check.StringSliceNoDups,
 			val:       []string{},
 		},
 		{
-			name:      "NoDups - none - 1 entry",
+			ID:        testhelper.MkID("NoDups - none - 1 entry"),
 			checkFunc: check.StringSliceNoDups,
 			val:       []string{"a"},
 		},
 		{
-			name:      "NoDups - none",
+			ID:        testhelper.MkID("NoDups - none"),
 			checkFunc: check.StringSliceNoDups,
 			val:       []string{"a", "b", "c", "d", "e"},
 		},
 		{
-			name:        "NoDups - has duplicates",
-			checkFunc:   check.StringSliceNoDups,
-			val:         []string{"a", "b", "b", "c", "d"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("NoDups - has duplicates"),
+			checkFunc: check.StringSliceNoDups,
+			val:       []string{"a", "b", "b", "c", "d"},
+			ExpErr: testhelper.MkExpErr(
 				"list entries:",
-				"are duplicates, both are: ",
-			},
+				"are duplicates, both are: 'b'"),
 		},
 		{
-			name:      "StringCheck - LT - all good",
+			ID:        testhelper.MkID("StringCheck - LT - all good"),
 			checkFunc: check.StringSliceStringCheck(check.StringLenLT(10)),
 			val:       []string{"a", "b", "c", "c", "e"},
 		},
 		{
-			name:        "StringCheck - LT - all bad",
-			checkFunc:   check.StringSliceStringCheck(check.StringLenGT(10)),
-			val:         []string{"a", "b", "c", "c", "e"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("StringCheck - LT - all bad"),
+			checkFunc: check.StringSliceStringCheck(check.StringLenGT(10)),
+			val:       []string{"a", "b", "c", "c", "e"},
+			ExpErr: testhelper.MkExpErr(
 				"list entry:",
 				"does not pass the test: ",
-				"greater than",
-			},
+				"greater than"),
 		},
 		{
-			name:      "LenLT: 1 < 2",
+			ID:        testhelper.MkID("LenLT: 1 < 2"),
 			checkFunc: check.StringSliceLenLT(2),
 			val:       []string{"a"},
 		},
 		{
-			name:        "LenLT: 1 !< 1",
-			checkFunc:   check.StringSliceLenLT(1),
-			val:         []string{"a"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenLT: 1 !< 1"),
+			checkFunc: check.StringSliceLenLT(1),
+			val:       []string{"a"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must be less than",
-			},
+				"must be less than"),
 		},
 		{
-			name:        "LenLT: 2 !< 1",
-			checkFunc:   check.StringSliceLenLT(1),
-			val:         []string{"a", "b"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenLT: 2 !< 1"),
+			checkFunc: check.StringSliceLenLT(1),
+			val:       []string{"a", "b"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must be less than",
-			},
+				"must be less than"),
 		},
 		{
-			name:      "LenEQ: 1 == 1",
+			ID:        testhelper.MkID("LenEQ: 1 == 1"),
 			checkFunc: check.StringSliceLenEQ(1),
 			val:       []string{"a"},
 		},
 		{
-			name:        "LenEQ: 1 != 2",
-			checkFunc:   check.StringSliceLenEQ(1),
-			val:         []string{"a", "b"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenEQ: 1 != 2"),
+			checkFunc: check.StringSliceLenEQ(1),
+			val:       []string{"a", "b"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must equal",
-			},
+				"must equal"),
 		},
 		{
-			name:        "LenEQ: 0 !=1",
-			checkFunc:   check.StringSliceLenEQ(1),
-			val:         []string{},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenEQ: 0 !=1"),
+			checkFunc: check.StringSliceLenEQ(1),
+			val:       []string{},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must equal",
-			},
+				"must equal"),
 		},
 		{
-			name:      "LenGT: 2 > 1",
+			ID:        testhelper.MkID("LenGT: 2 > 1"),
 			checkFunc: check.StringSliceLenGT(1),
 			val:       []string{"a", "b"},
 		},
 		{
-			name:        "LenGT: 1 !< 1",
-			checkFunc:   check.StringSliceLenGT(1),
-			val:         []string{"a"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenGT: 1 !< 1"),
+			checkFunc: check.StringSliceLenGT(1),
+			val:       []string{"a"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must be greater than",
-			},
+				"must be greater than"),
 		},
 		{
-			name:        "LenGT: 2 !< 1",
-			checkFunc:   check.StringSliceLenGT(2),
-			val:         []string{"a"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenGT: 2 !< 1"),
+			checkFunc: check.StringSliceLenGT(2),
+			val:       []string{"a"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
-				"must be greater than",
-			},
+				"must be greater than"),
 		},
 		{
-			name:      "LenBetween: 1 <= 2 <= 3",
+			ID:        testhelper.MkID("LenBetween: 1 <= 2 <= 3"),
 			checkFunc: check.StringSliceLenBetween(1, 3),
 			val:       []string{"a", "b"},
 		},
 		{
-			name:      "LenBetween: 1 <= 1 <= 3",
+			ID:        testhelper.MkID("LenBetween: 1 <= 1 <= 3"),
 			checkFunc: check.StringSliceLenBetween(1, 3),
 			val:       []string{"a"},
 		},
 		{
-			name:      "LenBetween: 1 <= 3 <= 3",
+			ID:        testhelper.MkID("LenBetween: 1 <= 3 <= 3"),
 			checkFunc: check.StringSliceLenBetween(1, 3),
 			val:       []string{"a", "b", "c"},
 		},
 		{
-			name:        "LenBetween: 1 !<= 0 <= 3",
-			checkFunc:   check.StringSliceLenBetween(1, 3),
-			val:         []string{},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenBetween: 1 !<= 0 <= 3"),
+			checkFunc: check.StringSliceLenBetween(1, 3),
+			val:       []string{},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
 				"must be between",
-				"too short",
-			},
+				"too short"),
 		},
 		{
-			name:        "LenBetween: 1 <= 4 !<= 3",
-			checkFunc:   check.StringSliceLenBetween(1, 3),
-			val:         []string{"a", "b", "c", "4"},
-			errExpected: true,
-			errMustContain: []string{
+			ID:        testhelper.MkID("LenBetween: 1 <= 4 !<= 3"),
+			checkFunc: check.StringSliceLenBetween(1, 3),
+			val:       []string{"a", "b", "c", "4"},
+			ExpErr: testhelper.MkExpErr(
 				"the length of the list",
 				"must be between",
-				"too long",
-			},
+				"too long"),
 		},
 		{
-			name: "Or: 1 > 2 , 1 > 3, 1 < 3",
+			ID: testhelper.MkID("Or: 1 > 2 , 1 > 3, 1 < 3"),
 			checkFunc: check.StringSliceOr(
 				check.StringSliceLenGT(2),
 				check.StringSliceLenGT(3),
@@ -179,23 +157,21 @@ func TestStringSlice(t *testing.T) {
 			val: []string{"a"},
 		},
 		{
-			name: "Or: 7 > 8, 7 < 6, 7 divides 60",
+			ID: testhelper.MkID("Or: 7 > 8, 7 < 6, 7 divides 60"),
 			checkFunc: check.StringSliceOr(
 				check.StringSliceLenGT(8),
 				check.StringSliceLenLT(6),
 				check.StringSliceLenEQ(60),
 			),
-			val:         []string{"a", "b", "c", "d", "e", "f", "g"},
-			errExpected: true,
-			errMustContain: []string{
+			val: []string{"a", "b", "c", "d", "e", "f", "g"},
+			ExpErr: testhelper.MkExpErr(
 				"must be greater than",
 				"must be less than",
 				"must equal",
-				" or ",
-			},
+				" or "),
 		},
 		{
-			name: "And: 5 > 2 , 5 > 3, 5 < 6",
+			ID: testhelper.MkID("And: 5 > 2 , 5 > 3, 5 < 6"),
 			checkFunc: check.StringSliceAnd(
 				check.StringSliceLenGT(2),
 				check.StringSliceLenGT(3),
@@ -204,32 +180,27 @@ func TestStringSlice(t *testing.T) {
 			val: []string{"a", "b", "c", "d", "e"},
 		},
 		{
-			name: "And: 11 > 8, 11 < 10",
+			ID: testhelper.MkID("And: 11 > 8, 11 < 10"),
 			checkFunc: check.StringSliceAnd(
 				check.StringSliceLenGT(8),
 				check.StringSliceLenLT(10),
 			),
 			val: []string{
 				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
-			errExpected: true,
-			errMustContain: []string{
-				"must be less than",
-			},
+			ExpErr: testhelper.MkExpErr("must be less than"),
 		},
 		{
-			name: "Not: 11 > 8",
+			ID: testhelper.MkID("Not: 11 > 8"),
 			checkFunc: check.StringSliceNot(
 				check.StringSliceLenGT(8),
 				"the slice length must not be greater than 8"),
 			val: []string{
 				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
-			errExpected: true,
-			errMustContain: []string{
-				"the slice length must not be greater than 8",
-			},
+			ExpErr: testhelper.MkExpErr(
+				"the slice length must not be greater than 8"),
 		},
 		{
-			name: "Not: 11 > 12",
+			ID: testhelper.MkID("Not: 11 > 12"),
 			checkFunc: check.StringSliceNot(
 				check.StringSliceLenGT(12),
 				"the slice length must not be greater than 12"),
@@ -238,11 +209,9 @@ func TestStringSlice(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-
+	for _, tc := range testCases {
 		err := tc.checkFunc(tc.val)
-		testhelper.CheckError(t, tcID, err, tc.errExpected, tc.errMustContain)
+		testhelper.CheckExpErr(t, err, tc)
 	}
 
 }
@@ -261,36 +230,31 @@ func panicSafeTestStringSliceLenBetween(t *testing.T, lowerVal, upperVal int) (p
 
 func TestStringSliceLenBetweenPanic(t *testing.T) {
 	testCases := []struct {
-		name             string
-		lower            int
-		upper            int
-		panicExpected    bool
-		panicMustContain []string
+		testhelper.ID
+		testhelper.ExpPanic
+		lower int
+		upper int
 	}{
 		{
-			name:  "LenBetween: 1, 3",
+			ID:    testhelper.MkID("LenBetween: 1, 3"),
 			lower: 1,
 			upper: 3,
 		},
 		{
-			name:          "LenBetween: 4, 3",
-			lower:         4,
-			upper:         3,
-			panicExpected: true,
-			panicMustContain: []string{
+			ID:    testhelper.MkID("LenBetween: 4, 3"),
+			lower: 4,
+			upper: 3,
+			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to StringSliceLenBetween: ",
 				"the lower limit",
-				"should be less than the upper limit",
-			},
+				"should be less than the upper limit"),
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
-		panicked, panicVal := panicSafeTestStringSliceLenBetween(t, tc.lower, tc.upper)
-		testhelper.PanicCheckString(t, tcID,
-			panicked, tc.panicExpected,
-			panicVal, tc.panicMustContain)
+	for _, tc := range testCases {
+		panicked, panicVal := panicSafeTestStringSliceLenBetween(t,
+			tc.lower, tc.upper)
+		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 
 }
