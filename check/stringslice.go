@@ -8,7 +8,7 @@ import "fmt"
 type StringSlice func(v []string) error
 
 // StringSliceStringCheck returns a check function that checks that every
-// member of the list matches the supplied String check func
+// entry in the list passes the supplied String check func
 func StringSliceStringCheck(sc String) StringSlice {
 	return func(v []string) error {
 		for i, s := range v {
@@ -22,8 +22,35 @@ func StringSliceStringCheck(sc String) StringSlice {
 	}
 }
 
+// StringSliceStringCheckByPos returns a check function that checks that a
+// given entry in the list passes the corresponding supplied String check
+// func. If there are more entries in the slice than check.String functions
+// then the final supplied check is applied. If there are fewer entries than
+// functions then the excess checks are not applied. Note that you could
+// choose to combine this check with a test of the length of the slice by
+// means of a StringSliceAnd check.
+func StringSliceStringCheckByPos(scs ...String) StringSlice {
+	return func(v []string) error {
+		if len(scs) == 0 {
+			return nil
+		}
+
+		for i, s := range v {
+			if i >= len(scs) {
+				i = len(scs) - 1
+			}
+			if err := scs[i](s); err != nil {
+				return fmt.Errorf(
+					"list entry: %d (%s) does not pass the test: %s",
+					i, s, err)
+			}
+		}
+		return nil
+	}
+}
+
 // StringSliceContains returns a check function that checks that at least one
-// member of the list matches the supplied String check func. The condition
+// entry in the list matches the supplied String check func. The condition
 // parameter should describe the check that is being performed. For instance,
 // if the check is that the string length must be greater than 5 characters
 // then the condition parameter should be

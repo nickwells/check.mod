@@ -1,6 +1,7 @@
 package check_test
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/nickwells/check.mod/check"
@@ -206,6 +207,33 @@ func TestStringSlice(t *testing.T) {
 				"the slice length must not be greater than 12"),
 			val: []string{
 				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
+		},
+		{
+			ID: testhelper.MkID("StringCheckByPos - all good"),
+			checkFunc: check.StringSliceStringCheckByPos(
+				check.StringEquals("RC"),
+				check.StringMatchesPattern(regexp.MustCompile("[1-9][0-9]*"),
+					"a non-zero number"),
+				check.StringOK),
+			val: []string{
+				"RC", "1", "xxx", "yyy"},
+		},
+		{
+			ID:        testhelper.MkID("StringCheckByPos - no checks - all good"),
+			checkFunc: check.StringSliceStringCheckByPos(),
+			val: []string{
+				"RC", "1", "xxx", "yyy"},
+		},
+		{
+			ID: testhelper.MkID("StringCheckByPos - bad"),
+			checkFunc: check.StringSliceStringCheckByPos(
+				check.StringEquals("RC"),
+				check.StringMatchesPattern(regexp.MustCompile("[1-9][0-9]*"),
+					"a non-zero number")),
+			val: []string{
+				"XXX", "1", "2", "3"},
+			ExpErr: testhelper.MkExpErr("does not pass the test",
+				"should equal 'RC'"),
 		},
 	}
 

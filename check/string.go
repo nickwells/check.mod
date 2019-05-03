@@ -10,6 +10,12 @@ import (
 // a parameter and returns an error or nil if the check passes
 type String func(s string) error
 
+// StringOK always returns a nil error - it can be of use with a
+// StringSliceStringCheckByPos to allow any value in certain slice positions
+func StringOK(_ string) error {
+	return nil
+}
+
 // StringLenEQ returns a function that will check that the
 // length of the string is equal to the limit
 func StringLenEQ(limit int) String {
