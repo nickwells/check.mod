@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/nickwells/check.mod?status.png)](https://godoc.org/github.com/nickwells/check.mod)
+
 # check
 A collection of atomic checks that can be applied to values.
 
