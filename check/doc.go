@@ -14,5 +14,9 @@ why not perform the check directly. The reason is that as functions they can
 be composed and combined and then passed to other code to be called later.
 They are used extensively for checking command line parameters.
 
+Many of the types have a ...Not function that can be used to invert the
+meaning of a check. Similarly, there are ...And and ...Or functions which can
+be used to compose checks.
+
 */
 package check
