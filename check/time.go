@@ -66,14 +66,28 @@ func TimeBetween(start, end time.Time) Time {
 }
 
 // TimeIsOnDOW returns a function that will check that the time is on the day
-// of the week given by the dow parameter
-func TimeIsOnDOW(dow time.Weekday) Time {
+// of the week given by one of the parameters
+func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) Time {
 	return func(val time.Time) error {
+		days := []time.Weekday{dow}
+		days = append(days, otherDOW...)
 		valDow := val.Weekday()
-		if valDow == dow {
-			return nil
+		for _, dow := range days {
+			if valDow == dow {
+				return nil
+			}
 		}
-		return fmt.Errorf("the day of week (%s) should be %s", valDow, dow)
+		sep := ""
+		validDays := ""
+		for i, d := range days {
+			validDays += sep + d.String()
+			sep = ", "
+			if i == len(days)-2 {
+				sep = " or "
+			}
+		}
+		return fmt.Errorf("the day of the week (%s) should be a %s",
+			valDow, validDays)
 	}
 }
 

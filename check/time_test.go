@@ -108,11 +108,28 @@ func TestTime(t *testing.T) {
 			val: testTime,
 		},
 		{
+			ID: testhelper.MkID("TimeIsOnDOW - multi-day - good"),
+			cf: check.TimeIsOnDOW(
+				time.Monday,
+				time.Tuesday,
+				time.Wednesday,
+				time.Thursday,
+				time.Friday),
+			val: testTime,
+		},
+		{
 			ID:  testhelper.MkID("TimeIsOnDOW - bad"),
 			cf:  check.TimeIsOnDOW(time.Wednesday),
 			val: testTime,
 			ExpErr: testhelper.MkExpErr(
-				"the day of week (Tuesday) should be Wednesday"),
+				"the day of the week (Tuesday) should be a Wednesday"),
+		},
+		{
+			ID:  testhelper.MkID("TimeIsOnDOW - multi-day - bad"),
+			cf:  check.TimeIsOnDOW(time.Saturday, time.Sunday),
+			val: testTime,
+			ExpErr: testhelper.MkExpErr(
+				"the day of the week (Tuesday) should be a Saturday or Sunday"),
 		},
 		{
 			ID: testhelper.MkID("TimeOr - good - passes first test"),
