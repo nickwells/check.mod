@@ -13,7 +13,7 @@ func Float64GT(limit float64) Float64 {
 		if f > limit {
 			return nil
 		}
-		return fmt.Errorf("the value (%f) must be greater than %f", f, limit)
+		return fmt.Errorf("the value (%g) must be greater than %g", f, limit)
 	}
 }
 
@@ -25,7 +25,7 @@ func Float64GE(limit float64) Float64 {
 			return nil
 		}
 		return fmt.Errorf(
-			"the value (%f) must be greater than or equal to %f", f, limit)
+			"the value (%g) must be greater than or equal to %g", f, limit)
 	}
 }
 
@@ -36,7 +36,7 @@ func Float64LT(limit float64) Float64 {
 		if f < limit {
 			return nil
 		}
-		return fmt.Errorf("the value (%f) must be less than %f", f, limit)
+		return fmt.Errorf("the value (%g) must be less than %g", f, limit)
 	}
 }
 
@@ -48,7 +48,7 @@ func Float64LE(limit float64) Float64 {
 			return nil
 		}
 		return fmt.Errorf(
-			"the value (%f) must be less than or equal to %f", f, limit)
+			"the value (%g) must be less than or equal to %g", f, limit)
 	}
 }
 
@@ -57,19 +57,19 @@ func Float64LE(limit float64) Float64 {
 func Float64Between(low, high float64) Float64 {
 	if low >= high {
 		panic(fmt.Sprintf("Impossible checks passed to Float64Between:"+
-			" the lower limit (%f) should be less than the upper limit (%f)",
+			" the lower limit (%g) should be less than the upper limit (%g)",
 			low, high))
 	}
 
 	return func(f float64) error {
 		if f < low {
 			return fmt.Errorf(
-				"the value (%f) must be between %f and %f - too small",
+				"the value (%g) must be between %g and %g - too small",
 				f, low, high)
 		}
 		if f > high {
 			return fmt.Errorf(
-				"the value (%f) must be between %f and %f - too big",
+				"the value (%g) must be between %g and %g - too big",
 				f, low, high)
 		}
 		return nil
@@ -125,6 +125,6 @@ func Float64Not(c Float64, errMsg string) Float64 {
 			return nil
 		}
 
-		return fmt.Errorf("%f should not be %s", v, errMsg)
+		return fmt.Errorf("%g should not be %s", v, errMsg)
 	}
 }
