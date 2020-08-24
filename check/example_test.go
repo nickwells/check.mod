@@ -8,7 +8,11 @@ import (
 
 // Example demonstrates how check functions might be used. It sets up two
 // collections of checks on a slice of strings, the first collection should
-// all pass (return a nil error) and the second set should all fail
+// all pass (return a nil error) and the second set should all fail. Note
+// that the check functions called below each returns a function of type
+// check.StringSlice. For instance check.StringSliceLenEQ(2) returns a
+// check.StringSlice function that will check that the given slice is of
+// length 2. This technique is used throughout the package.
 func Example() {
 	s := []string{"hello", "world"}
 
