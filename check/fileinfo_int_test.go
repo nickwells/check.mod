@@ -1,67 +1,62 @@
 package check
 
 import (
-	"fmt"
 	"os"
 	"testing"
+
+	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
 func TestModeName(t *testing.T) {
 	testCases := []struct {
-		name   string
+		testhelper.ID
 		mode   os.FileMode
 		expVal string
 	}{
 		{
-			name:   "file",
+			ID:     testhelper.MkID("file"),
 			mode:   0,
 			expVal: "a regular file",
 		},
 		{
-			name:   "dir",
+			ID:     testhelper.MkID("dir"),
 			mode:   os.ModeDir,
 			expVal: "a directory",
 		},
 		{
-			name:   "symlink",
+			ID:     testhelper.MkID("symlink"),
 			mode:   os.ModeSymlink,
 			expVal: "a symlink",
 		},
 		{
-			name:   "named pipe",
+			ID:     testhelper.MkID("named pipe"),
 			mode:   os.ModeNamedPipe,
 			expVal: "a named pipe",
 		},
 		{
-			name:   "socket",
+			ID:     testhelper.MkID("socket"),
 			mode:   os.ModeSocket,
 			expVal: "a socket",
 		},
 		{
-			name:   "device",
+			ID:     testhelper.MkID("device"),
 			mode:   os.ModeDevice,
 			expVal: "a device",
 		},
 		{
-			name:   "non-regular",
+			ID:     testhelper.MkID("non-regular"),
 			mode:   os.ModeIrregular,
 			expVal: "a non-regular file",
 		},
 		{
-			name:   "named pipe or socket",
+			ID:     testhelper.MkID("named pipe or socket"),
 			mode:   os.ModeNamedPipe | os.ModeSocket,
 			expVal: "a named pipe or a socket",
 		},
 	}
 
-	for i, tc := range testCases {
-		tcID := fmt.Sprintf("test %d: %s", i, tc.name)
+	for _, tc := range testCases {
 		val := modeName(tc.mode)
-		if val != tc.expVal {
-			t.Log(tcID)
-			t.Log("\t: Expected: " + tc.expVal)
-			t.Log("\t:      Got: " + val)
-			t.Errorf("\t: unexpected mode name\n")
-		}
+		testhelper.CmpValString(t, tc.IDStr(), "mode name", val, tc.expVal)
 	}
 }
