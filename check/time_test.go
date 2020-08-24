@@ -205,18 +205,6 @@ func TestTime(t *testing.T) {
 	}
 }
 
-func panicSafeTestTimeBetween(t *testing.T, lowerVal, upperVal time.Time) (panicked bool, panicVal interface{}) {
-	t.Helper()
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-			panicVal = r
-		}
-	}()
-	check.TimeBetween(lowerVal, upperVal)
-	return panicked, panicVal
-}
-
 func TestTimeBetweenPanic(t *testing.T) {
 	testTime := time.Date(2018, time.December, 18,
 		9, 16, 30, 0, time.UTC)
@@ -231,12 +219,12 @@ func TestTimeBetweenPanic(t *testing.T) {
 		end   time.Time
 	}{
 		{
-			ID:    testhelper.MkID("Between: good"),
+			ID:    testhelper.MkID("Good: Between: start before end"),
 			start: timeMinus60s,
 			end:   timePlus60s,
 		},
 		{
-			ID:    testhelper.MkID("Between: bad: start after end"),
+			ID:    testhelper.MkID("Bad: Between: bad: start after end"),
 			start: timePlus60s,
 			end:   timeMinus60s,
 			ExpPanic: testhelper.MkExpPanic(
@@ -245,7 +233,7 @@ func TestTimeBetweenPanic(t *testing.T) {
 				"should be before the end time"),
 		},
 		{
-			ID:    testhelper.MkID("Between: bad: start == end"),
+			ID:    testhelper.MkID("Bad: Between: bad: start == end"),
 			start: testTime,
 			end:   testTime,
 			ExpPanic: testhelper.MkExpPanic(
@@ -256,7 +244,9 @@ func TestTimeBetweenPanic(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		panicked, panicVal := panicSafeTestTimeBetween(t, tc.start, tc.end)
+		panicked, panicVal := testhelper.PanicSafe(func() {
+			check.TimeBetween(tc.start, tc.end)
+		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 }

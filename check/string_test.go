@@ -228,18 +228,6 @@ func TestString(t *testing.T) {
 
 }
 
-func panicSafeTestStringLenBetween(t *testing.T, lowerVal, upperVal int) (panicked bool, panicVal interface{}) {
-	t.Helper()
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-			panicVal = r
-		}
-	}()
-	check.StringLenBetween(lowerVal, upperVal)
-	return panicked, panicVal
-}
-
 func TestStringLenBetweenPanic(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
@@ -248,14 +236,24 @@ func TestStringLenBetweenPanic(t *testing.T) {
 		upper int
 	}{
 		{
-			ID:    testhelper.MkID("Between: 1, 3"),
+			ID:    testhelper.MkID("Good: Length Between: 1, 3"),
 			lower: 1,
 			upper: 3,
 		},
 		{
-			ID:    testhelper.MkID("Between: 4, 3"),
+			ID:    testhelper.MkID("Bad: Length Between: 4, 3"),
 			lower: 4,
 			upper: 3,
+			ExpPanic: testhelper.MkExpPanic(
+				"Impossible checks passed to StringLenBetween: ",
+				"the lower limit",
+				"should be less than the upper limit",
+			),
+		},
+		{
+			ID:    testhelper.MkID("Bad: Length Between: 2, 2"),
+			lower: 2,
+			upper: 2,
 			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to StringLenBetween: ",
 				"the lower limit",
@@ -265,8 +263,9 @@ func TestStringLenBetweenPanic(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		panicked, panicVal := panicSafeTestStringLenBetween(
-			t, tc.lower, tc.upper)
+		panicked, panicVal := testhelper.PanicSafe(func() {
+			check.StringLenBetween(tc.lower, tc.upper)
+		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 }

@@ -173,18 +173,6 @@ func TestFloat64(t *testing.T) {
 
 }
 
-func panicSafeTestFloat64Between(t *testing.T, lowerVal, upperVal float64) (panicked bool, panicVal interface{}) {
-	t.Helper()
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-			panicVal = r
-		}
-	}()
-	check.Float64Between(lowerVal, upperVal)
-	return panicked, panicVal
-}
-
 func TestFloat64BetweenPanic(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
@@ -193,14 +181,23 @@ func TestFloat64BetweenPanic(t *testing.T) {
 		upper float64
 	}{
 		{
-			ID:    testhelper.MkID("Between: 1.0, 3.0"),
+			ID:    testhelper.MkID("Good: Between: 1.0, 3.0"),
 			lower: 1.0,
 			upper: 3.0,
 		},
 		{
-			ID:    testhelper.MkID("Between: 4.0, 3.0"),
+			ID:    testhelper.MkID("Bad: Between: 4.0, 3.0"),
 			lower: 4.0,
 			upper: 3.0,
+			ExpPanic: testhelper.MkExpPanic(
+				"Impossible checks passed to Float64Between: ",
+				"the lower limit",
+				"should be less than the upper limit"),
+		},
+		{
+			ID:    testhelper.MkID("Bad: Between: 2.0, 2.0"),
+			lower: 2.0,
+			upper: 2.0,
 			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to Float64Between: ",
 				"the lower limit",
@@ -209,7 +206,9 @@ func TestFloat64BetweenPanic(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		panicked, panicVal := panicSafeTestFloat64Between(t, tc.lower, tc.upper)
+		panicked, panicVal := testhelper.PanicSafe(func() {
+			check.Float64Between(tc.lower, tc.upper)
+		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 

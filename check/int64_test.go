@@ -212,18 +212,6 @@ func TestInt64(t *testing.T) {
 
 }
 
-func panicSafeTestInt64Between(t *testing.T, lowerVal, upperVal int64) (panicked bool, panicVal interface{}) {
-	t.Helper()
-	defer func() {
-		if r := recover(); r != nil {
-			panicked = true
-			panicVal = r
-		}
-	}()
-	check.Int64Between(lowerVal, upperVal)
-	return panicked, panicVal
-}
-
 func TestInt64BetweenPanic(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
@@ -232,14 +220,23 @@ func TestInt64BetweenPanic(t *testing.T) {
 		upper int64
 	}{
 		{
-			ID:    testhelper.MkID("Between: 1, 3"),
+			ID:    testhelper.MkID("Good: Between: 1, 3"),
 			lower: 1,
 			upper: 3,
 		},
 		{
-			ID:    testhelper.MkID("Between: 4, 3"),
+			ID:    testhelper.MkID("Bad: Between: 4, 3"),
 			lower: 4,
 			upper: 3,
+			ExpPanic: testhelper.MkExpPanic(
+				"Impossible checks passed to Int64Between: ",
+				"the lower limit",
+				"should be less than the upper limit"),
+		},
+		{
+			ID:    testhelper.MkID("Bad: Between: 2, 2"),
+			lower: 2,
+			upper: 2,
 			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to Int64Between: ",
 				"the lower limit",
@@ -248,7 +245,9 @@ func TestInt64BetweenPanic(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		panicked, panicVal := panicSafeTestInt64Between(t, tc.lower, tc.upper)
+		panicked, panicVal := testhelper.PanicSafe(func() {
+			check.Int64Between(tc.lower, tc.upper)
+		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
 }
