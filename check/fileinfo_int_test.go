@@ -57,6 +57,6 @@ func TestModeName(t *testing.T) {
 
 	for _, tc := range testCases {
 		val := modeName(tc.mode)
-		testhelper.CmpValString(t, tc.IDStr(), "mode name", val, tc.expVal)
+		testhelper.DiffString(t, tc.IDStr(), "mode name", val, tc.expVal)
 	}
 }
