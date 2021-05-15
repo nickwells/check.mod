@@ -30,7 +30,8 @@ func TestString(t *testing.T) {
 			ExpErr: testhelper.MkExpErr(
 				"the length of the value",
 				"must equal"),
-		}, {
+		},
+		{
 			ID:        testhelper.MkID("LenLT: 1 < 2"),
 			checkFunc: check.StringLenLT(2),
 			val:       "a",
@@ -133,13 +134,13 @@ func TestString(t *testing.T) {
 			val:       "abcx",
 		},
 		{
-			ID:        testhelper.MkID("HasPrefix - bad - completely different"),
+			ID:        testhelper.MkID("HasPrefix - bad - different"),
 			checkFunc: check.StringHasPrefix("abc"),
 			val:       "xxxx",
 			ExpErr:    testhelper.MkExpErr("should have 'abc' as a prefix"),
 		},
 		{
-			ID:        testhelper.MkID("HasPrefix - bad - only partly"),
+			ID:        testhelper.MkID("HasPrefix - bad - partly different"),
 			checkFunc: check.StringHasPrefix("abc"),
 			val:       "abxxxx",
 			ExpErr:    testhelper.MkExpErr("should have 'abc' as a prefix"),
@@ -150,13 +151,13 @@ func TestString(t *testing.T) {
 			val:       "xabc",
 		},
 		{
-			ID:        testhelper.MkID("HasSuffix - bad - completely different"),
+			ID:        testhelper.MkID("HasSuffix - bad - different"),
 			checkFunc: check.StringHasSuffix("abc"),
 			val:       "xxxx",
 			ExpErr:    testhelper.MkExpErr("should have 'abc' as a suffix"),
 		},
 		{
-			ID:        testhelper.MkID("HasSuffix - bad - only partly"),
+			ID:        testhelper.MkID("HasSuffix - bad - partly different"),
 			checkFunc: check.StringHasSuffix("abc"),
 			val:       "xxxxab",
 			ExpErr:    testhelper.MkExpErr("should have 'abc' as a suffix"),
@@ -225,7 +226,6 @@ func TestString(t *testing.T) {
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func TestStringLenBetweenPanic(t *testing.T) {

@@ -187,26 +187,25 @@ func TestStringSlice(t *testing.T) {
 				check.StringSliceLenLT(10),
 			),
 			val: []string{
-				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
+				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k",
+			},
 			ExpErr: testhelper.MkExpErr("must be less than"),
 		},
 		{
-			ID: testhelper.MkID("Not: 11 > 8"),
+			ID: testhelper.MkID("Not: 10 > 8"),
 			checkFunc: check.StringSliceNot(
 				check.StringSliceLenGT(8),
 				"the slice length must not be greater than 8"),
-			val: []string{
-				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
+			val: []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"},
 			ExpErr: testhelper.MkExpErr(
 				"the slice length must not be greater than 8"),
 		},
 		{
-			ID: testhelper.MkID("Not: 11 > 12"),
+			ID: testhelper.MkID("Not: 10 > 12"),
 			checkFunc: check.StringSliceNot(
 				check.StringSliceLenGT(12),
 				"the slice length must not be greater than 12"),
-			val: []string{
-				"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k"},
+			val: []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"},
 		},
 		{
 			ID: testhelper.MkID("StringCheckByPos - all good"),
@@ -215,14 +214,13 @@ func TestStringSlice(t *testing.T) {
 				check.StringMatchesPattern(regexp.MustCompile("[1-9][0-9]*"),
 					"a non-zero number"),
 				check.StringOK),
-			val: []string{
-				"RC", "1", "xxx", "yyy"},
+			val: []string{"RC", "1", "xxx", "yyy"},
 		},
 		{
-			ID:        testhelper.MkID("StringCheckByPos - no checks - all good"),
+			ID: testhelper.MkID(
+				"StringCheckByPos - no checks - all good"),
 			checkFunc: check.StringSliceStringCheckByPos(),
-			val: []string{
-				"RC", "1", "xxx", "yyy"},
+			val:       []string{"RC", "1", "xxx", "yyy"},
 		},
 		{
 			ID: testhelper.MkID("StringCheckByPos - bad"),
@@ -230,9 +228,9 @@ func TestStringSlice(t *testing.T) {
 				check.StringEquals("RC"),
 				check.StringMatchesPattern(regexp.MustCompile("[1-9][0-9]*"),
 					"a non-zero number")),
-			val: []string{
-				"XXX", "1", "2", "3"},
-			ExpErr: testhelper.MkExpErr("does not pass the test",
+			val: []string{"XXX", "1", "2", "3"},
+			ExpErr: testhelper.MkExpErr(
+				"does not pass the test",
 				"should equal 'RC'"),
 		},
 	}
@@ -241,7 +239,6 @@ func TestStringSlice(t *testing.T) {
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func TestStringSliceLenBetweenPanic(t *testing.T) {
@@ -282,5 +279,4 @@ func TestStringSliceLenBetweenPanic(t *testing.T) {
 		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
-
 }

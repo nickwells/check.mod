@@ -209,7 +209,6 @@ func TestInt64(t *testing.T) {
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func TestInt64BetweenPanic(t *testing.T) {

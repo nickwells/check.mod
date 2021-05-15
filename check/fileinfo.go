@@ -116,7 +116,6 @@ func modeName(m os.FileMode) string {
 	}
 	if m&os.ModeIrregular == os.ModeIrregular {
 		name += sep + "a non-regular file"
-		//sep = _Or
 	}
 	return name
 }

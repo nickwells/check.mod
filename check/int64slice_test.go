@@ -210,7 +210,6 @@ func TestInt64Slice(t *testing.T) {
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func TestInt64SliceLenBetweenPanic(t *testing.T) {
@@ -251,5 +250,4 @@ func TestInt64SliceLenBetweenPanic(t *testing.T) {
 		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
-
 }

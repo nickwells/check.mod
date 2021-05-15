@@ -173,7 +173,6 @@ func TestDuration(t *testing.T) {
 		err := tc.checkFunc(tc.d)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (panicked bool, panicVal interface{}) {
@@ -212,8 +211,8 @@ func TestDurationBetweenPanic(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		panicked, panicVal := panicSafeTestDurationBetween(t, tc.lower, tc.upper)
+		panicked, panicVal := panicSafeTestDurationBetween(
+			t, tc.lower, tc.upper)
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
-
 }

@@ -170,7 +170,6 @@ func TestFloat64(t *testing.T) {
 		err := tc.checkFunc(tc.val)
 		testhelper.CheckExpErr(t, err, tc)
 	}
-
 }
 
 func TestFloat64BetweenPanic(t *testing.T) {
@@ -211,5 +210,4 @@ func TestFloat64BetweenPanic(t *testing.T) {
 		})
 		testhelper.CheckExpPanic(t, panicked, panicVal, tc)
 	}
-
 }
