@@ -22,7 +22,7 @@ func FileInfoOwnedBySelf(fi os.FileInfo) error {
 
 // FileInfoUidEQ returns a FileInfo (func) that tests that the file is owned
 // by the specified user
-func FileInfoUidEQ(uid uint32) FileInfo { //nolint: golint
+func FileInfoUidEQ(uid uint32) FileInfo { //nolint: revive
 	return func(fi os.FileInfo) error {
 		stat := fi.Sys().(*syscall.Stat_t) // will panic if Sys() doesn't
 		// return a Stat_t
