@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestFileInfo(t *testing.T) {
 	fileWithSetPerms := "testdata/IsAFile.PBits0600"
-	_ = os.Chmod(fileWithSetPerms, 0600) // force the file mode
+	_ = os.Chmod(fileWithSetPerms, 0o600) // force the file mode
 
 	fileWithKnownInfo := "testdata/IsAFile"
 	fi, err := os.Stat(fileWithKnownInfo)
@@ -85,12 +85,12 @@ func TestFileInfo(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("FileInfoPerm - good"),
-			cf:       check.FileInfoPerm(check.FilePermEQ(0600)),
+			cf:       check.FileInfoPerm(check.FilePermEQ(0o600)),
 			fileName: fileWithSetPerms,
 		},
 		{
 			ID:       testhelper.MkID("FileInfoPerm - bad"),
-			cf:       check.FileInfoPerm(check.FilePermEQ(0666)),
+			cf:       check.FileInfoPerm(check.FilePermEQ(0o666)),
 			fileName: fileWithSetPerms,
 			ExpErr: testhelper.MkExpErr(
 				"the check on the permissions of '",

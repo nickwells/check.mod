@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestInt64Slice(t *testing.T) {

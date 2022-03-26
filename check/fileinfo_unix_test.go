@@ -1,3 +1,4 @@
+//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris
 // +build darwin dragonfly freebsd linux netbsd openbsd solaris
 
 package check_test
@@ -9,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestFileInfoUnix(t *testing.T) {

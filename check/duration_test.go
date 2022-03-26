@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/nickwells/check.mod/check"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func TestDuration(t *testing.T) {
@@ -175,7 +175,9 @@ func TestDuration(t *testing.T) {
 	}
 }
 
-func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (panicked bool, panicVal interface{}) {
+func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (
+	panicked bool, panicVal any,
+) {
 	t.Helper()
 	defer func() {
 		if r := recover(); r != nil {

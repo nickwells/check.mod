@@ -1,15 +1,17 @@
+//go:build darwin || dragonfly || freebsd || linux || netbsd || openbsd || solaris
 // +build darwin dragonfly freebsd linux netbsd openbsd solaris
 
 package check
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"syscall"
 )
 
 // FileInfoOwnedBySelf tests that the file is owned by the calling user
-func FileInfoOwnedBySelf(fi os.FileInfo) error {
+func FileInfoOwnedBySelf(fi fs.FileInfo) error {
 	stat := fi.Sys().(*syscall.Stat_t) // will panic if Sys() doesn't
 	// return a Stat_t
 	if stat.Uid == uint32(os.Getuid()) {
@@ -23,7 +25,7 @@ func FileInfoOwnedBySelf(fi os.FileInfo) error {
 // FileInfoUidEQ returns a FileInfo (func) that tests that the file is owned
 // by the specified user
 func FileInfoUidEQ(uid uint32) FileInfo { //nolint: revive
-	return func(fi os.FileInfo) error {
+	return func(fi fs.FileInfo) error {
 		stat := fi.Sys().(*syscall.Stat_t) // will panic if Sys() doesn't
 		// return a Stat_t
 		if stat.Uid == uid {
@@ -37,7 +39,7 @@ func FileInfoUidEQ(uid uint32) FileInfo { //nolint: revive
 // FileInfoGidEQ returns a FileInfo (func) that tests that the file is owned
 // by the specified user
 func FileInfoGidEQ(gid uint32) FileInfo {
-	return func(fi os.FileInfo) error {
+	return func(fi fs.FileInfo) error {
 		stat := fi.Sys().(*syscall.Stat_t) // will panic if Sys() doesn't
 		// return a Stat_t
 		if stat.Gid == gid {
