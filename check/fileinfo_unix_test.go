@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 

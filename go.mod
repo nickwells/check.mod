@@ -1,4 +1,4 @@
-module github.com/nickwells/check.mod
+module github.com/nickwells/check.mod/v2
 
 go 1.18
 

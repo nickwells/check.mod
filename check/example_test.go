@@ -3,7 +3,7 @@ package check_test
 import (
 	"fmt"
 
-	"github.com/nickwells/check.mod/check"
+	"github.com/nickwells/check.mod/v2/check"
 )
 
 // Example demonstrates how check functions might be used. It sets up two
