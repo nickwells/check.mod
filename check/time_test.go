@@ -21,7 +21,7 @@ func TestTime(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
-		cf  check.Time
+		cf  check.ValCk[time.Time]
 		val time.Time
 	}{
 		{
@@ -33,13 +33,29 @@ func TestTime(t *testing.T) {
 			ID:     testhelper.MkID("TimeEQ - bad - before"),
 			cf:     check.TimeEQ(testTime),
 			val:    timeMinus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be equal to "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must equal "),
 		},
 		{
 			ID:     testhelper.MkID("TimeEQ - bad - after"),
 			cf:     check.TimeEQ(testTime),
 			val:    timePlus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be equal to "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must equal "),
+		},
+		{
+			ID:     testhelper.MkID("TimeNE - bad"),
+			cf:     check.TimeNE(testTime),
+			val:    testTime,
+			ExpErr: testhelper.MkExpErr("the time must not equal "),
+		},
+		{
+			ID:  testhelper.MkID("TimeNE - good - before"),
+			cf:  check.TimeNE(testTime),
+			val: timeMinus60s,
+		},
+		{
+			ID:  testhelper.MkID("TimeNE - good - after"),
+			cf:  check.TimeNE(testTime),
+			val: timePlus60s,
 		},
 		{
 			ID:  testhelper.MkID("TimeGT - good"),
@@ -50,13 +66,29 @@ func TestTime(t *testing.T) {
 			ID:     testhelper.MkID("TimeGT - bad - equal"),
 			cf:     check.TimeGT(testTime),
 			val:    testTime,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be after "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be after "),
 		},
 		{
 			ID:     testhelper.MkID("TimeGT - bad - before"),
 			cf:     check.TimeGT(testTime),
 			val:    timeMinus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be after "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be after "),
+		},
+		{
+			ID:  testhelper.MkID("TimeGE - good"),
+			cf:  check.TimeGE(testTime),
+			val: timePlus60s,
+		},
+		{
+			ID:  testhelper.MkID("TimeGE - good - equal"),
+			cf:  check.TimeGE(testTime),
+			val: testTime,
+		},
+		{
+			ID:     testhelper.MkID("TimeGE - bad - before"),
+			cf:     check.TimeGE(testTime),
+			val:    timeMinus60s,
+			ExpErr: testhelper.MkExpErr("the time (", ") must be at or after "),
 		},
 		{
 			ID:  testhelper.MkID("TimeLT - good"),
@@ -67,13 +99,29 @@ func TestTime(t *testing.T) {
 			ID:     testhelper.MkID("TimeLT - bad - equal"),
 			cf:     check.TimeLT(testTime),
 			val:    testTime,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be before "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be before "),
 		},
 		{
 			ID:     testhelper.MkID("TimeLT - bad - after"),
 			cf:     check.TimeLT(testTime),
 			val:    timePlus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be before "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be before "),
+		},
+		{
+			ID:  testhelper.MkID("TimeLE - good"),
+			cf:  check.TimeLE(testTime),
+			val: timeMinus60s,
+		},
+		{
+			ID:  testhelper.MkID("TimeLE - good - equal"),
+			cf:  check.TimeLE(testTime),
+			val: testTime,
+		},
+		{
+			ID:     testhelper.MkID("TimeLE - bad - after"),
+			cf:     check.TimeLE(testTime),
+			val:    timePlus60s,
+			ExpErr: testhelper.MkExpErr("the time (", ") must be at or before "),
 		},
 		{
 			ID:  testhelper.MkID("TimeBetween - good"),
@@ -94,13 +142,13 @@ func TestTime(t *testing.T) {
 			ID:     testhelper.MkID("TimeBetween - bad - before start"),
 			cf:     check.TimeBetween(timeMinus60s, timePlus60s),
 			val:    timeMinus120s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be between "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be between "),
 		},
 		{
 			ID:     testhelper.MkID("TimeBetween - bad - after end"),
 			cf:     check.TimeBetween(timeMinus60s, timePlus60s),
 			val:    timePlus120s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be between "),
+			ExpErr: testhelper.MkExpErr("the time (", ") must be between "),
 		},
 		{
 			ID:  testhelper.MkID("TimeIsOnDOW - good"),
@@ -122,80 +170,14 @@ func TestTime(t *testing.T) {
 			cf:  check.TimeIsOnDOW(time.Wednesday),
 			val: testTime,
 			ExpErr: testhelper.MkExpErr(
-				"the day of the week (Tuesday) should be a Wednesday"),
+				"the day of the week (Tuesday) must be a Wednesday"),
 		},
 		{
 			ID:  testhelper.MkID("TimeIsOnDOW - multi-day - bad"),
 			cf:  check.TimeIsOnDOW(time.Saturday, time.Sunday),
 			val: testTime,
 			ExpErr: testhelper.MkExpErr(
-				"the day of the week (Tuesday) should be a Saturday or Sunday"),
-		},
-		{
-			ID: testhelper.MkID("TimeOr - good - passes first test"),
-			cf: check.TimeOr(
-				check.TimeLT(timeMinus60s),
-				check.TimeGT(timePlus60s)),
-			val: timeMinus120s,
-		},
-		{
-			ID: testhelper.MkID("TimeOr - good - passes second test"),
-			cf: check.TimeOr(
-				check.TimeLT(timeMinus60s),
-				check.TimeGT(timePlus60s)),
-			val: timePlus120s,
-		},
-		{
-			ID: testhelper.MkID("TimeOr - bad"),
-			cf: check.TimeOr(
-				check.TimeLT(timeMinus60s),
-				check.TimeGT(timePlus60s)),
-			val: testTime,
-			ExpErr: testhelper.MkExpErr(
-				"the time (", ") should be before ",
-				" OR the time (", ") should be after "),
-		},
-		{
-			ID: testhelper.MkID("TimeAnd - good"),
-			cf: check.TimeAnd(
-				check.TimeLT(timeMinus60s),
-				check.TimeLT(testTime)),
-			val: timeMinus120s,
-		},
-		{
-			ID: testhelper.MkID("TimeAnd - bad - fails first"),
-			cf: check.TimeAnd(
-				check.TimeLT(testTime),
-				check.TimeLT(timeMinus120s),
-			),
-			val:    timePlus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be before "),
-		},
-		{
-			ID: testhelper.MkID("TimeAnd - bad - fails second"),
-			cf: check.TimeAnd(
-				check.TimeLT(testTime),
-				check.TimeLT(timeMinus120s),
-			),
-			val:    timeMinus60s,
-			ExpErr: testhelper.MkExpErr("the time (", ") should be before "),
-		},
-		{
-			ID: testhelper.MkID("TimeNot - good"),
-			cf: check.TimeNot(
-				check.TimeLT(timeMinus120s),
-				"should not be less than the given time",
-			),
-			val: timeMinus60s,
-		},
-		{
-			ID: testhelper.MkID("TimeNot - bad"),
-			cf: check.TimeNot(
-				check.TimeLT(testTime),
-				"should not be before the given time",
-			),
-			val:    timeMinus60s,
-			ExpErr: testhelper.MkExpErr("should not be before the given time"),
+				"the day of the week (Tuesday) must be a Saturday or Sunday"),
 		},
 	}
 
@@ -230,7 +212,7 @@ func TestTimeBetweenPanic(t *testing.T) {
 			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to TimeBetween: ",
 				"the start time",
-				"should be before the end time"),
+				"must be before the end time"),
 		},
 		{
 			ID:    testhelper.MkID("Bad: Between: bad: start == end"),
@@ -239,7 +221,7 @@ func TestTimeBetweenPanic(t *testing.T) {
 			ExpPanic: testhelper.MkExpPanic(
 				"Impossible checks passed to TimeBetween: ",
 				"the start time",
-				"should be before the end time"),
+				"must be before the end time"),
 		},
 	}
 

@@ -28,7 +28,7 @@ func TestFileInfo(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
-		cf       check.FileInfo
+		cf       check.ValCk[os.FileInfo]
 		fileName string
 	}{
 		{
@@ -55,33 +55,33 @@ func TestFileInfo(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("FileInfoName - good"),
-			cf:       check.FileInfoName(check.StringHasPrefix("IsA")),
+			cf:       check.FileInfoName(check.StringHasPrefix[string]("IsA")),
 			fileName: "testdata/IsAFile",
 		},
 		{
 			ID:       testhelper.MkID("FileInfoName - bad"),
-			cf:       check.FileInfoName(check.StringHasPrefix("XXX")),
+			cf:       check.FileInfoName(check.StringHasPrefix[string]("XXX")),
 			fileName: "testdata/IsAFile",
 			ExpErr: testhelper.MkExpErr(
-				"the check on the name of '",
-				"' failed: ",
-				"should have 'XXX' as a prefix",
+				"the file name ",
+				" is incorrect: ",
+				`should have "XXX" as a prefix`,
 			),
 		},
 		{
 			ID:       testhelper.MkID("FileInfoSize - good"),
-			cf:       check.FileInfoSize(check.Int64EQ(0)),
+			cf:       check.FileInfoSize(check.ValEQ(int64(0))),
 			fileName: "testdata/IsAFile",
 		},
 		{
 			ID:       testhelper.MkID("FileInfoSize - bad"),
-			cf:       check.FileInfoSize(check.Int64EQ(99)),
+			cf:       check.FileInfoSize(check.ValEQ(int64(99))),
 			fileName: "testdata/IsAFile",
 			ExpErr: testhelper.MkExpErr(
-				"the check on the size of '",
-				"' failed: ",
+				"the check on the size of ",
+				" failed: ",
 				"the value ",
-				" must be equal to 99"),
+				" must equal 99"),
 		},
 		{
 			ID:       testhelper.MkID("FileInfoPerm - good"),
@@ -93,10 +93,10 @@ func TestFileInfo(t *testing.T) {
 			cf:       check.FileInfoPerm(check.FilePermEQ(0o666)),
 			fileName: fileWithSetPerms,
 			ExpErr: testhelper.MkExpErr(
-				"the check on the permissions of '",
-				"' failed: ",
+				"the file permissions of ",
+				" are incorrect: ",
 				"the permissions ",
-				" should be equal to 0666"),
+				" should equal 0666"),
 		},
 		{
 			ID:       testhelper.MkID("FileInfoMode - good"),
@@ -120,67 +120,10 @@ func TestFileInfo(t *testing.T) {
 			cf:       check.FileInfoModTime(check.TimeLT(timeBeforeModTime)),
 			fileName: fileWithKnownInfo,
 			ExpErr: testhelper.MkExpErr(
-				"the check on the modification time of '",
-				"' failed: ",
+				"the modification time of ",
+				" is incorrect: ",
 				"the time ",
-				" should be before"),
-		},
-		{
-			ID: testhelper.MkID("FileInfoAnd - good"),
-			cf: check.FileInfoAnd(
-				check.FileInfoName(check.StringHasPrefix("IsA")),
-				check.FileInfoName(check.StringHasSuffix("File")),
-			),
-			fileName: "testdata/IsAFile",
-		},
-		{
-			ID: testhelper.MkID("FileInfoAnd - bad"),
-			cf: check.FileInfoAnd(
-				check.FileInfoName(check.StringHasPrefix("IsA")),
-				check.FileInfoName(check.StringHasPrefix("XXX")),
-			),
-			fileName: "testdata/IsAFile",
-			ExpErr: testhelper.MkExpErr(
-				"the check on the name of '",
-				"' failed: ",
-				"should have 'XXX' as a prefix"),
-		},
-		{
-			ID: testhelper.MkID("FileInfoOr - good"),
-			cf: check.FileInfoOr(
-				check.FileInfoName(check.StringHasPrefix("XXX")),
-				check.FileInfoName(check.StringHasSuffix("File")),
-			),
-			fileName: "testdata/IsAFile",
-		},
-		{
-			ID: testhelper.MkID("FileInfoOr - bad"),
-			cf: check.FileInfoOr(
-				check.FileInfoName(check.StringHasPrefix("YYY")),
-				check.FileInfoName(check.StringHasPrefix("XXX")),
-			),
-			fileName: "testdata/IsAFile",
-			ExpErr: testhelper.MkExpErr(
-				"the check on the name of '",
-				"' failed: ",
-				"should have 'XXX' as a prefix",
-				" or ",
-				"should have 'YYY' as a prefix"),
-		},
-		{
-			ID: testhelper.MkID("FileInfoNot - good"),
-			cf: check.FileInfoNot(
-				check.FileInfoName(check.StringHasPrefix("XXX")),
-				"test"),
-			fileName: "testdata/IsAFile",
-		},
-		{
-			ID: testhelper.MkID("FileInfoNot - bad"),
-			cf: check.FileInfoNot(
-				check.FileInfoName(check.StringHasPrefix("IsA")),
-				"should not have a prefix of 'IsA'"),
-			fileName: "testdata/IsAFile",
-			ExpErr:   testhelper.MkExpErr("should not have a prefix of 'IsA'"),
+				" must be before"),
 		},
 	}
 

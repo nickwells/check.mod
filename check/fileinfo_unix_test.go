@@ -5,6 +5,7 @@ package check_test
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"syscall"
 	"testing"
@@ -24,7 +25,7 @@ func TestFileInfoUnix(t *testing.T) {
 
 	testCases := []struct {
 		name           string
-		cf             check.FileInfo
+		cf             check.ValCk[fs.FileInfo]
 		errExpected    bool
 		errMustContain []string
 	}{

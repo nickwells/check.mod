@@ -16,10 +16,10 @@ import (
 func Example() {
 	s := []string{"hello", "world"}
 
-	passingChecks := []check.StringSlice{
-		check.StringSliceLenEQ(2),
-		check.StringSliceContains(
-			check.StringEquals("hello"),
+	passingChecks := []check.ValCk[[]string]{
+		check.SliceLength[[]string, string](check.ValEQ(2)),
+		check.SliceAny[[]string](
+			check.ValEQ("hello"),
 			"the list of strings must contain 'hello'"),
 	}
 
@@ -31,10 +31,10 @@ func Example() {
 	}
 	fmt.Println("All checks expected to pass, passed")
 
-	failingChecks := []check.StringSlice{
-		check.StringSliceLenEQ(3),
-		check.StringSliceNot(
-			check.StringSliceNoDups,
+	failingChecks := []check.ValCk[[]string]{
+		check.SliceLength[[]string, string](check.ValEQ(3)),
+		check.Not(
+			check.SliceHasNoDups[[]string],
 			"the list of strings must contain duplicates"),
 	}
 
