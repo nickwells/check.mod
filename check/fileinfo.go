@@ -2,14 +2,14 @@ package check
 
 import (
 	"fmt"
-	"os"
+	"io/fs"
 	"time"
 )
 
 // FileInfoSize returns a function that will check that the file size passes
 // the test specified by the passed Int64 check
-func FileInfoSize(cf ValCk[int64]) ValCk[os.FileInfo] {
-	return func(fi os.FileInfo) error {
+func FileInfoSize(cf ValCk[int64]) ValCk[fs.FileInfo] {
+	return func(fi fs.FileInfo) error {
 		err := cf(fi.Size())
 		if err != nil {
 			return fmt.Errorf("the check on the size of %q failed: %w",
@@ -21,8 +21,8 @@ func FileInfoSize(cf ValCk[int64]) ValCk[os.FileInfo] {
 
 // FileInfoPerm returns a function that will check that the file permissions
 // pass the test specified by the passed FilePerm check
-func FileInfoPerm(cf ValCk[os.FileMode]) ValCk[os.FileInfo] {
-	return func(fi os.FileInfo) error {
+func FileInfoPerm(cf ValCk[fs.FileMode]) ValCk[fs.FileInfo] {
+	return func(fi fs.FileInfo) error {
 		err := cf(fi.Mode())
 		if err != nil {
 			return fmt.Errorf("the file permissions of %q are incorrect: %w",
@@ -34,8 +34,8 @@ func FileInfoPerm(cf ValCk[os.FileMode]) ValCk[os.FileInfo] {
 
 // FileInfoName returns a function that will check that the file name
 // passes the test specified by the passed String check
-func FileInfoName(cf ValCk[string]) ValCk[os.FileInfo] {
-	return func(fi os.FileInfo) error {
+func FileInfoName(cf ValCk[string]) ValCk[fs.FileInfo] {
+	return func(fi fs.FileInfo) error {
 		err := cf(fi.Name())
 		if err != nil {
 			return fmt.Errorf("the file name %q is incorrect: %w",
@@ -46,7 +46,7 @@ func FileInfoName(cf ValCk[string]) ValCk[os.FileInfo] {
 }
 
 // FileInfoIsDir will check that the file info describes a directory
-func FileInfoIsDir(fi os.FileInfo) error {
+func FileInfoIsDir(fi fs.FileInfo) error {
 	if fi.IsDir() {
 		return nil
 	}
@@ -54,7 +54,7 @@ func FileInfoIsDir(fi os.FileInfo) error {
 }
 
 // FileInfoIsRegular will check that the file info describes a regular file
-func FileInfoIsRegular(fi os.FileInfo) error {
+func FileInfoIsRegular(fi fs.FileInfo) error {
 	if fi.Mode().IsRegular() {
 		return nil
 	}
@@ -68,9 +68,9 @@ func FileInfoIsRegular(fi os.FileInfo) error {
 // function will return nil if any of the bits is set. This allows you to
 // check for several types at once. If a zero value is passed it will check
 // for a regular file - none of the bits are set.
-func FileInfoMode(m os.FileMode) ValCk[os.FileInfo] {
-	return func(fi os.FileInfo) error {
-		typeBits := fi.Mode() & os.ModeType
+func FileInfoMode(m fs.FileMode) ValCk[fs.FileInfo] {
+	return func(fi fs.FileInfo) error {
+		typeBits := fi.Mode() & fs.ModeType
 		if typeBits == m ||
 			typeBits&m != 0 {
 			return nil
@@ -83,7 +83,7 @@ func FileInfoMode(m os.FileMode) ValCk[os.FileInfo] {
 
 // modeName reports the bits set in the file mode value in a human-readable
 // form
-func modeName(m os.FileMode) string {
+func modeName(m fs.FileMode) string {
 	if m == 0 {
 		return "a regular file"
 	}
@@ -91,27 +91,27 @@ func modeName(m os.FileMode) string {
 	sep := ""
 	name := ""
 
-	if m&os.ModeDir == os.ModeDir {
+	if m&fs.ModeDir == fs.ModeDir {
 		name += sep + "a directory"
 		sep = " or "
 	}
-	if m&os.ModeSymlink == os.ModeSymlink {
+	if m&fs.ModeSymlink == fs.ModeSymlink {
 		name += sep + "a symlink"
 		sep = " or "
 	}
-	if m&os.ModeNamedPipe == os.ModeNamedPipe {
+	if m&fs.ModeNamedPipe == fs.ModeNamedPipe {
 		name += sep + "a named pipe"
 		sep = " or "
 	}
-	if m&os.ModeSocket == os.ModeSocket {
+	if m&fs.ModeSocket == fs.ModeSocket {
 		name += sep + "a socket"
 		sep = " or "
 	}
-	if m&os.ModeDevice == os.ModeDevice {
+	if m&fs.ModeDevice == fs.ModeDevice {
 		name += sep + "a device"
 		sep = " or "
 	}
-	if m&os.ModeIrregular == os.ModeIrregular {
+	if m&fs.ModeIrregular == fs.ModeIrregular {
 		name += sep + "a non-regular file"
 	}
 	return name
@@ -119,8 +119,8 @@ func modeName(m os.FileMode) string {
 
 // FileInfoModTime returns a function that will check that the file
 // modification time passes the test specified by the passed Time check
-func FileInfoModTime(cf ValCk[time.Time]) ValCk[os.FileInfo] {
-	return func(fi os.FileInfo) error {
+func FileInfoModTime(cf ValCk[time.Time]) ValCk[fs.FileInfo] {
+	return func(fi fs.FileInfo) error {
 		err := cf(fi.ModTime())
 		if err != nil {
 			return fmt.Errorf(

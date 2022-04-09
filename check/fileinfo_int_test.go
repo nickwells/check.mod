@@ -1,7 +1,7 @@
 package check
 
 import (
-	"os"
+	"io/fs"
 	"testing"
 
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
@@ -10,7 +10,7 @@ import (
 func TestModeName(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
-		mode   os.FileMode
+		mode   fs.FileMode
 		expVal string
 	}{
 		{
@@ -20,37 +20,37 @@ func TestModeName(t *testing.T) {
 		},
 		{
 			ID:     testhelper.MkID("dir"),
-			mode:   os.ModeDir,
+			mode:   fs.ModeDir,
 			expVal: "a directory",
 		},
 		{
 			ID:     testhelper.MkID("symlink"),
-			mode:   os.ModeSymlink,
+			mode:   fs.ModeSymlink,
 			expVal: "a symlink",
 		},
 		{
 			ID:     testhelper.MkID("named pipe"),
-			mode:   os.ModeNamedPipe,
+			mode:   fs.ModeNamedPipe,
 			expVal: "a named pipe",
 		},
 		{
 			ID:     testhelper.MkID("socket"),
-			mode:   os.ModeSocket,
+			mode:   fs.ModeSocket,
 			expVal: "a socket",
 		},
 		{
 			ID:     testhelper.MkID("device"),
-			mode:   os.ModeDevice,
+			mode:   fs.ModeDevice,
 			expVal: "a device",
 		},
 		{
 			ID:     testhelper.MkID("non-regular"),
-			mode:   os.ModeIrregular,
+			mode:   fs.ModeIrregular,
 			expVal: "a non-regular file",
 		},
 		{
 			ID:     testhelper.MkID("named pipe or socket"),
-			mode:   os.ModeNamedPipe | os.ModeSocket,
+			mode:   fs.ModeNamedPipe | fs.ModeSocket,
 			expVal: "a named pipe or a socket",
 		},
 	}

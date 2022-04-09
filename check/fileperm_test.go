@@ -1,7 +1,7 @@
 package check_test
 
 import (
-	"os"
+	"io/fs"
 	"testing"
 
 	"github.com/nickwells/check.mod/v2/check"
@@ -12,8 +12,8 @@ func TestFilePerm(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
-		fileMode os.FileMode
-		cf       check.ValCk[os.FileMode]
+		fileMode fs.FileMode
+		cf       check.ValCk[fs.FileMode]
 	}{
 		{
 			ID:       testhelper.MkID("EQ - good"),

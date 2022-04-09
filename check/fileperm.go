@@ -2,13 +2,13 @@ package check
 
 import (
 	"fmt"
-	"os"
+	"io/fs"
 )
 
 // FilePermEQ returns a function that will check that the file permission is
 // set to the value of the perms parameter
-func FilePermEQ(perms os.FileMode) ValCk[os.FileMode] {
-	return func(fm os.FileMode) error {
+func FilePermEQ(perms fs.FileMode) ValCk[fs.FileMode] {
+	return func(fm fs.FileMode) error {
 		if fm.Perm() == perms {
 			return nil
 		}
@@ -19,8 +19,8 @@ func FilePermEQ(perms os.FileMode) ValCk[os.FileMode] {
 
 // FilePermHasAll returns a function that will check that the file permission
 // has all of the permissions set in the perms parameter
-func FilePermHasAll(perms os.FileMode) ValCk[os.FileMode] {
-	return func(fm os.FileMode) error {
+func FilePermHasAll(perms fs.FileMode) ValCk[fs.FileMode] {
+	return func(fm fs.FileMode) error {
 		if (fm.Perm() & perms) == perms {
 			return nil
 		}
@@ -32,8 +32,8 @@ func FilePermHasAll(perms os.FileMode) ValCk[os.FileMode] {
 
 // FilePermHasNone returns a function that will check that the file permission
 // has none of the permissions set in the perms parameter
-func FilePermHasNone(perms os.FileMode) ValCk[os.FileMode] {
-	return func(fm os.FileMode) error {
+func FilePermHasNone(perms fs.FileMode) ValCk[fs.FileMode] {
+	return func(fm fs.FileMode) error {
 		if (fm.Perm() & perms) == 0 {
 			return nil
 		}
