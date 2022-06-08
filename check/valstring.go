@@ -57,3 +57,25 @@ func StringHasSuffix[T ~string](suffix string) ValCk[T] {
 		return nil
 	}
 }
+
+// StringContains returns a function that checks that the string contains the
+// supplied string
+func StringContains[T ~string](substr string) ValCk[T] {
+	return func(v T) error {
+		if !strings.Contains(string(v), substr) {
+			return fmt.Errorf("%q should contain %q", v, substr)
+		}
+		return nil
+	}
+}
+
+// StringFoldedEQ returns a function that checks that the string is equal to
+// the supplied string under Unicode case-folding.
+func StringFoldedEQ[T ~string](s string) ValCk[T] {
+	return func(v T) error {
+		if !strings.EqualFold(string(v), s) {
+			return fmt.Errorf("%q should equal %q when ignoring case", v, s)
+		}
+		return nil
+	}
+}

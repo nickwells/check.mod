@@ -9,9 +9,9 @@ import (
 )
 
 func TestString(t *testing.T) {
-	regexpStr := "^a[a-z]+d$"
-	regexpVal := regexp.MustCompile(regexpStr)
-	regexpDesc := "3 or more letters starting with an a and ending with d"
+	reStr := "^a[a-z]+d$"
+	reVal := regexp.MustCompile(reStr)
+	reDesc := "3 or more letters starting with an a and ending with d"
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
@@ -108,14 +108,14 @@ func TestString(t *testing.T) {
 		},
 		{
 			ID:        testhelper.MkID("Matches - good"),
-			checkFunc: check.StringMatchesPattern[string](regexpVal, regexpDesc),
+			checkFunc: check.StringMatchesPattern[string](reVal, reDesc),
 			val:       "abcd",
 		},
 		{
 			ID:        testhelper.MkID("Matches - bad"),
-			checkFunc: check.StringMatchesPattern[string](regexpVal, regexpDesc),
+			checkFunc: check.StringMatchesPattern[string](reVal, reDesc),
 			val:       "xxx",
-			ExpErr:    testhelper.MkExpErr(`"xxx" should be:`, regexpDesc),
+			ExpErr:    testhelper.MkExpErr(`"xxx" should be:`, reDesc),
 		},
 		{
 			ID:        testhelper.MkID("Equals - good"),
@@ -163,7 +163,50 @@ func TestString(t *testing.T) {
 			ExpErr:    testhelper.MkExpErr(`should have "abc" as a suffix`),
 		},
 		{
-			ID: testhelper.MkID(") < 3"),
+			ID:        testhelper.MkID("StringContains - good"),
+			checkFunc: check.StringContains[string]("abc"),
+			val:       "xabcy",
+		},
+		{
+			ID:        testhelper.MkID("StringContains - good"),
+			checkFunc: check.StringContains[string]("abc"),
+			val:       "abcy",
+		},
+		{
+			ID:        testhelper.MkID("StringContains - good"),
+			checkFunc: check.StringContains[string]("abc"),
+			val:       "xabc",
+		},
+		{
+			ID:        testhelper.MkID("StringContains - bad"),
+			checkFunc: check.StringContains[string]("abc"),
+			val:       "xabyc",
+			ExpErr:    testhelper.MkExpErr(`should contain "abc"`),
+		},
+		{
+			ID:        testhelper.MkID("StringFoldedEQ - good"),
+			checkFunc: check.StringFoldedEQ[string]("Hello, World!"),
+			val:       "Hello, World!",
+		},
+		{
+			ID:        testhelper.MkID("StringFoldedEQ - good"),
+			checkFunc: check.StringFoldedEQ[string]("Hello, World!"),
+			val:       "HELLO, WORLD!",
+		},
+		{
+			ID:        testhelper.MkID("StringFoldedEQ - good"),
+			checkFunc: check.StringFoldedEQ[string]("Hello, World!"),
+			val:       "HeLlO, WoRlD!",
+		},
+		{
+			ID:        testhelper.MkID("StringFoldedEQ - bad"),
+			checkFunc: check.StringFoldedEQ[string]("Hello, World!"),
+			val:       "Goodbye, World!",
+			ExpErr: testhelper.MkExpErr(
+				`should equal "Hello, World!" when ignoring case`),
+		},
+		{
+			ID: testhelper.MkID(`Or: len("a") > 2, len("a") > 3, len("a") < 3`),
 			checkFunc: check.Or(
 				check.StringLength[string](check.ValGT(2)),
 				check.StringLength[string](check.ValGT(3)),
@@ -172,7 +215,7 @@ func TestString(t *testing.T) {
 			val: "a",
 		},
 		{
-			ID: testhelper.MkID(") < 1"),
+			ID: testhelper.MkID(`Or: len("ab") > 3, len("ab") < 1 - bad`),
 			checkFunc: check.Or(
 				check.StringLength[string](check.ValGT(3)),
 				check.StringLength[string](check.ValLT(1)),
@@ -184,8 +227,8 @@ func TestString(t *testing.T) {
 				" or "),
 		},
 		{
-			ID: testhelper.MkID("And: len(\"abcd\") > 2 ," +
-				" len(\"abcd\") > 3, len(\"abcd\") < 6"),
+			ID: testhelper.MkID(`And: len(\"abcd\") > 2 ,` +
+				` len("abcd") > 3, len("abcd") < 6`),
 			checkFunc: check.And(
 				check.StringLength[string](check.ValGT(2)),
 				check.StringLength[string](check.ValGT(3)),
@@ -194,7 +237,7 @@ func TestString(t *testing.T) {
 			val: "abcd",
 		},
 		{
-			ID: testhelper.MkID(") < 3"),
+			ID: testhelper.MkID(`And: len("abcd") > 1, len("abcd") < 3 - bad`),
 			checkFunc: check.And(
 				check.StringLength[string](check.ValGT(1)),
 				check.StringLength[string](check.ValLT(3)),
@@ -203,7 +246,7 @@ func TestString(t *testing.T) {
 			ExpErr: testhelper.MkExpErr("must be less than"),
 		},
 		{
-			ID: testhelper.MkID(") > 6"),
+			ID: testhelper.MkID(`Not: len("abcd") > 6`),
 			checkFunc: check.Not(
 				check.StringLength[string](check.ValGT(6)),
 				"should not be longer than 6 characters",
@@ -211,7 +254,7 @@ func TestString(t *testing.T) {
 			val: "abcd",
 		},
 		{
-			ID: testhelper.MkID(") > 3"),
+			ID: testhelper.MkID(`Not: len("abcd") > 3 - bad`),
 			checkFunc: check.Not(
 				check.StringLength[string](check.ValGT(3)),
 				"should not be longer than 3 characters",
