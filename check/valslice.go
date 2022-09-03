@@ -67,7 +67,8 @@ func SliceAll[S ~[]E, E any](cf ValCk[E]) ValCk[S] {
 // being performed. For instance, for a slice of strings, if the check is
 // that the string length must be greater than 5 characters then the
 // condition parameter should be:
-//     "the string should be greater than 5 characters"
+//
+//	"the string should be greater than 5 characters"
 //
 // It returns nil if any of the entries pass the supplied check.
 func SliceAny[S ~[]E, E any](cf ValCk[E], msg string) ValCk[S] {

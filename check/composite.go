@@ -41,9 +41,12 @@ func And[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 // to appear after the value that fails. This error text should be a string
 // that describes the quality that the number should not have. So, for
 // instance, if the function being Not'ed was
-//     check.ValGT[T any](5)
+//
+//	check.ValGT[T any](5)
+//
 // then the errMsg parameter should be
-//     "a number greater than 5".
+//
+//	"a number greater than 5".
 func Not[T any](c ValCk[T], errMsg string) ValCk[T] {
 	return func(v T) error {
 		err := c(v)

@@ -93,7 +93,8 @@ func MapValAll[M ~map[K]V, K comparable, V any](cf ValCk[V]) ValCk[M] {
 // instance, for a map keyed with strings, if the check is that the string
 // length must be greater than 5 characters then the condition parameter
 // should be:
-//     "the string should be greater than 5 characters"
+//
+//	"the string should be greater than 5 characters"
 //
 // It returns nil if any of the keys pass the supplied check
 func MapKeyAny[M ~map[K]V, K comparable, V any](cf ValCk[K], msg string) ValCk[M] {
@@ -113,7 +114,8 @@ func MapKeyAny[M ~map[K]V, K comparable, V any](cf ValCk[K], msg string) ValCk[M
 // instance, for a map keyed with strings, if the check is that the string
 // length must be greater than 5 characters then the condition parameter
 // should be:
-//     "the string should be greater than 5 characters"
+//
+//	"the string should be greater than 5 characters"
 //
 // It returns nil if any of the values pass the supplied check
 func MapValAny[M ~map[K]V, K comparable, V any](cf ValCk[V], msg string) ValCk[M] {
