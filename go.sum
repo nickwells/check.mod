@@ -1,4 +1,9 @@
-github.com/nickwells/testhelper.mod/v2 v2.0.0 h1:g4QqEDymswzvLa7oGlzbTFX3/17lNNjW09lcl6jso1c=
-github.com/nickwells/testhelper.mod/v2 v2.0.0/go.mod h1:pdhf+XHRINEUH6a0OcwC98ETD3ZluAXKA5xOhC2I2Qk=
-golang.org/x/exp v0.0.0-20220325121720-054d8573a5d8 h1:Xt4/LzbTwfocTk9ZLEu4onjeFucl88iW+v4j4PWbQuE=
-golang.org/x/exp v0.0.0-20220325121720-054d8573a5d8/go.mod h1:lgLbSvA5ygNOMpwM/9anMpWVlVJ7Z+cHWq/eFuinpGE=
+github.com/nickwells/english.mod v1.0.16 h1:DIWrgCAq8rKMFfjACOHrvi/sSo5Z0UfO8f+cKZpKKUE=
+github.com/nickwells/english.mod v1.0.16/go.mod h1:rJ69JHmOu68yKJCOfJduG9DFAezwACpilpuhuePD/MU=
+github.com/nickwells/tempsperdu.mod v1.0.0 h1:iz5OTX6S0oOjnQXu1KQXLYpimOvnVSriaZ/WROHMd+k=
+github.com/nickwells/tempsperdu.mod v1.0.0/go.mod h1:MsXLsG2HJH8hkXSSOdpDp5oeZKkONv3voaKBJfAKfL4=
+github.com/nickwells/testhelper.mod v1.16.0 h1:uh6CATjMyw/ASPdIrF2e4yTfWGYzJHK6RSJrRuZxgK4=
+github.com/nickwells/testhelper.mod/v2 v2.0.1 h1:j6gXgWv/gShCsLXv/H01mHH64Rxr7DKNj339URTHtmk=
+github.com/nickwells/testhelper.mod/v2 v2.0.1/go.mod h1:pdhf+XHRINEUH6a0OcwC98ETD3ZluAXKA5xOhC2I2Qk=
+golang.org/x/exp v0.0.0-20220827204233-334a2380cb91 h1:tnebWN09GYg9OLPss1KXj8txwZc6X6uMr6VFdcGNbHw=
+golang.org/x/exp v0.0.0-20220827204233-334a2380cb91/go.mod h1:cyybsKvd6eL0RnXn6p/Grxp8F5bW7iYuBgsNCOHpMYE=

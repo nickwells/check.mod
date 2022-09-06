@@ -3,6 +3,9 @@ package check
 import (
 	"fmt"
 	"time"
+
+	"github.com/nickwells/english.mod/english"
+	"github.com/nickwells/tempsperdu.mod/tempsperdu"
 )
 
 // TimeEQ returns a function that will check that the tested time is equal to
@@ -126,5 +129,64 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 		}
 		return fmt.Errorf("the day of the week (%s) must be a %s",
 			valDow, validDays)
+	}
+}
+
+// TimeIsALeapYear checks that the time value falls on a leap year
+func TimeIsALeapYear(t time.Time) error {
+	if tempsperdu.IsLeapYear(t) {
+		return nil
+	}
+	return fmt.Errorf("the year (%d) is not a leap year", t.Year())
+}
+
+// daysFromStartOfMonth returns the number of days from the start of the
+// month (0-n)
+func daysFromStartOfMonth(t time.Time) int {
+	return t.Day() - 1
+}
+
+// daysFromEndOfMonth returns the number of days from the end of the
+// month (0-n)
+func daysFromEndOfMonth(t time.Time) int {
+	return tempsperdu.DaysInMonth(t) - t.Day()
+}
+
+// TimeIsNthWeekdayOfMonth returns a function that will check that the time
+// is on the nth day of the week of the month. Negative values for n mean
+// that the check is from the end of the month.
+func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
+	if n == 0 || n > 5 || n < -5 {
+		panic(fmt.Sprintf(
+			"Impossible check passed to TimeIsNthWeekdayOfMonth:"+
+				" n (== %d) must be between 1 & 5 or -5 & -1",
+			n))
+	}
+
+	return func(val time.Time) error {
+		valDow := val.Weekday()
+		if valDow != dow {
+			return fmt.Errorf(
+				"the day of the week is not %s (it is %s)",
+				dow, valDow)
+		}
+
+		var valDom int
+		var desc string
+		if n > 0 {
+			valDom = daysFromStartOfMonth(val)
+			desc = "of the month"
+		} else {
+			n = -n
+			valDom = daysFromEndOfMonth(val)
+			desc = "from the end of the month"
+		}
+		wk := (valDom / 7) + 1
+		if n != wk {
+			return fmt.Errorf(
+				"the day is not the %d%s %s %s",
+				n, english.OrdinalSuffix(n), dow, desc)
+		}
+		return nil
 	}
 }
