@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/nickwells/english.mod/english"
-	"github.com/nickwells/tempsperdu.mod/tempsperdu"
+	"github.com/nickwells/tempus.mod/tempus"
 )
 
 // TimeEQ returns a function that will check that the tested time is equal to
@@ -134,7 +134,7 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 
 // TimeIsALeapYear checks that the time value falls on a leap year
 func TimeIsALeapYear(t time.Time) error {
-	if tempsperdu.IsLeapYear(t) {
+	if tempus.IsLeapYear(t) {
 		return nil
 	}
 	return fmt.Errorf("the year (%d) is not a leap year", t.Year())
@@ -149,7 +149,7 @@ func daysFromStartOfMonth(t time.Time) int {
 // daysFromEndOfMonth returns the number of days from the end of the
 // month (0-n)
 func daysFromEndOfMonth(t time.Time) int {
-	return tempsperdu.DaysInMonth(t) - t.Day()
+	return tempus.DaysInMonth(t) - t.Day()
 }
 
 // TimeIsNthWeekdayOfMonth returns a function that will check that the time

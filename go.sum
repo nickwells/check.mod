@@ -1,7 +1,7 @@
 github.com/nickwells/english.mod v1.0.17 h1:TjUx66Cd6qCeJLoPJFMfLaFWLvbBTwrPxnjgbB4FTgQ=
 github.com/nickwells/english.mod v1.0.17/go.mod h1:d/7cA5ZJDw8+dmVIKaE15hrZUi/D5e2kJIBRDHaob4c=
-github.com/nickwells/tempsperdu.mod v1.0.0 h1:iz5OTX6S0oOjnQXu1KQXLYpimOvnVSriaZ/WROHMd+k=
-github.com/nickwells/tempsperdu.mod v1.0.0/go.mod h1:MsXLsG2HJH8hkXSSOdpDp5oeZKkONv3voaKBJfAKfL4=
+github.com/nickwells/tempus.mod v1.0.0 h1:jeQJBmcJlDl70Po2umZZv+mXgNQDtS0KlqyW3mGXNhw=
+github.com/nickwells/tempus.mod v1.0.0/go.mod h1:88TOSPiO/uNOelvC147jj33phkR+pk5bQKY8TjbyOqE=
 github.com/nickwells/testhelper.mod v1.16.0 h1:uh6CATjMyw/ASPdIrF2e4yTfWGYzJHK6RSJrRuZxgK4=
 github.com/nickwells/testhelper.mod/v2 v2.0.1 h1:j6gXgWv/gShCsLXv/H01mHH64Rxr7DKNj339URTHtmk=
 github.com/nickwells/testhelper.mod/v2 v2.0.1/go.mod h1:pdhf+XHRINEUH6a0OcwC98ETD3ZluAXKA5xOhC2I2Qk=
