@@ -84,7 +84,7 @@ func TimeLE(t time.Time) ValCk[time.Time] {
 // between the start and end times (inclusive)
 func TimeBetween(start, end time.Time) ValCk[time.Time] {
 	if start.After(end) || start == end {
-		panic(fmt.Sprintf("Impossible checks passed to TimeBetween:"+
+		panic(fmt.Errorf("Impossible checks passed to TimeBetween:"+
 			" the start time (%v) must be before the end time (%v)",
 			start, end))
 	}
@@ -157,7 +157,7 @@ func daysFromEndOfMonth(t time.Time) int {
 // that the check is from the end of the month.
 func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 	if n == 0 || n > 5 || n < -5 {
-		panic(fmt.Sprintf(
+		panic(fmt.Errorf(
 			"Impossible check passed to TimeIsNthWeekdayOfMonth:"+
 				" n (== %d) must be between 1 & 5 or -5 & -1",
 			n))
