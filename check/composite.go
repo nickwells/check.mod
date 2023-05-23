@@ -2,12 +2,14 @@ package check
 
 import "fmt"
 
-// Or returns a function that will check that the value, when
-// passed to each of the check funcs in turn, passes at least one of them
+// Or returns a function that will check that the value, when passed to each
+// of the check funcs in turn, passes at least one of them. If any check
+// passes a nil error is returned. The error returned (if any) will show all
+// the failing checks.
 func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 	return func(v T) error {
 		compositeErr := ""
-		sep := "("
+		sep := "either ["
 
 		for _, cf := range chkFuncs {
 			err := cf(v)
@@ -16,14 +18,15 @@ func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 			}
 
 			compositeErr += sep + err.Error()
-			sep = " or "
+			sep = "] or ["
 		}
-		return fmt.Errorf("%s)", compositeErr)
+		return fmt.Errorf("%s]", compositeErr)
 	}
 }
 
-// And returns a function that will check that the value, when
-// passed to each of the check funcs in turn, passes all of them
+// And returns a function that will check that the value, when passed to each
+// of the check funcs in turn, passes all of them. The error from the first
+// check to fail is returned.
 func And[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 	return func(v T) error {
 		for _, cf := range chkFuncs {
