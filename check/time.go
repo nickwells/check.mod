@@ -119,22 +119,12 @@ func dowValid(dow time.Weekday) error {
 		dow, time.Sunday, time.Saturday)
 }
 
-// TimeIsOnDOW returns a function that will check that the time is on the day
-// of the week given by one of the parameters
-func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
-	if err := dowValid(dow); err != nil {
-		panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
-	}
-	for _, other := range otherDOW {
-		if err := dowValid(other); err != nil {
-			panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
-		}
-	}
-
+// findDupDOW will return a slice (possibly empty) describing all the days of
+// the week that appear multiple times in the supplied slice.
+func findDupDOW(dows []time.Weekday) []string {
 	dupChk := map[time.Weekday]int{}
-	dupChk[dow]++
-	for _, other := range otherDOW {
-		dupChk[other]++
+	for _, dow := range dows {
+		dupChk[dow]++
 	}
 	dupVals := []string{}
 	for k, count := range dupChk {
@@ -143,8 +133,29 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 				fmt.Sprintf("%s appears %d times", k, count))
 		}
 	}
-	if len(dupVals) > 0 {
-		sort.StringSlice(dupVals).Sort()
+	return dupVals
+}
+
+// findBadDOW returns an error for the first bad entry in the slice of
+// Weekdays or nil if they are all good
+func findBadDOW(dows []time.Weekday) error {
+	for _, dow := range dows {
+		if err := dowValid(dow); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// TimeIsOnDOW returns a function that will check that the time is on the day
+// of the week given by one of the parameters
+func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
+	if err := findBadDOW(append(otherDOW, dow)); err != nil {
+		panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
+	}
+
+	if dupVals := findDupDOW(append(otherDOW, dow)); len(dupVals) > 0 {
+		sort.StringSlice(dupVals).Sort() // sort to make tests reproducible
 		panic(fmt.Errorf(
 			"Bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
 			strings.Join(dupVals, ", ")))
