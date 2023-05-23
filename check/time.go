@@ -184,8 +184,9 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 		wk := (valDom / 7) + 1
 		if n != wk {
 			return fmt.Errorf(
-				"the day is not the %d%s %s %s",
-				n, english.OrdinalSuffix(n), dow, desc)
+				"the day is not the %d%s %s %s (it is the %d%s)",
+				n, english.OrdinalSuffix(n), dow, desc,
+				wk, english.OrdinalSuffix(wk))
 		}
 		return nil
 	}
