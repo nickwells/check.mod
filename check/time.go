@@ -2,6 +2,8 @@ package check
 
 import (
 	"fmt"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/nickwells/english.mod/english"
@@ -106,9 +108,48 @@ func TimeBetween(start, end time.Time) ValCk[time.Time] {
 	}
 }
 
+// dowValid returns an error if the passed weekday is not between Sunday and
+// Saturday inclusive, nil otherwise.
+func dowValid(dow time.Weekday) error {
+	if dow >= time.Sunday && dow <= time.Saturday {
+		return nil
+	}
+	return fmt.Errorf(
+		"The day-of-week (%d) is invalid it must be in the range [%d - %d]",
+		dow, time.Sunday, time.Saturday)
+}
+
 // TimeIsOnDOW returns a function that will check that the time is on the day
 // of the week given by one of the parameters
 func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
+	if err := dowValid(dow); err != nil {
+		panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
+	}
+	for _, other := range otherDOW {
+		if err := dowValid(other); err != nil {
+			panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
+		}
+	}
+
+	dupChk := map[time.Weekday]int{}
+	dupChk[dow]++
+	for _, other := range otherDOW {
+		dupChk[other]++
+	}
+	dupVals := []string{}
+	for k, count := range dupChk {
+		if count > 1 {
+			dupVals = append(dupVals,
+				fmt.Sprintf("%s appears %d times", k, count))
+		}
+	}
+	if len(dupVals) > 0 {
+		sort.StringSlice(dupVals).Sort()
+		panic(fmt.Errorf(
+			"Bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
+			strings.Join(dupVals, ", ")))
+	}
+
 	return func(val time.Time) error {
 		days := []time.Weekday{dow}
 		days = append(days, otherDOW...)
@@ -161,6 +202,10 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 			"Impossible check passed to TimeIsNthWeekdayOfMonth:"+
 				" n (== %d) must be between 1 & 5 or -5 & -1",
 			n))
+	}
+	if err := dowValid(dow); err != nil {
+		panic(fmt.Errorf(
+			"Impossible check passed to TimeIsNthWeekdayOfMonth: %w", err))
 	}
 
 	return func(val time.Time) error {
