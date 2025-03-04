@@ -179,6 +179,7 @@ func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (
 	panicked bool, panicVal any,
 ) {
 	t.Helper()
+
 	defer func() {
 		if r := recover(); r != nil {
 			panicked = true
@@ -186,6 +187,7 @@ func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (
 		}
 	}()
 	check.ValBetween(ld, ud)
+
 	return panicked, panicVal
 }
 

@@ -10,10 +10,12 @@ import (
 func SliceLength[S ~[]E, E any](cf ValCk[int]) ValCk[S] {
 	return func(v S) error {
 		lv := len(v)
+
 		err := cf(lv)
 		if err == nil {
 			return nil
 		}
+
 		return fmt.Errorf("the length of the list (%d) is incorrect: %w",
 			lv, err)
 	}
@@ -57,6 +59,7 @@ func SliceAll[S ~[]E, E any](cf ValCk[E]) ValCk[S] {
 					i, e, err)
 			}
 		}
+
 		return nil
 	}
 }
@@ -120,7 +123,9 @@ func SliceHasNoDups[S ~[]E, E comparable](v S) error {
 			return fmt.Errorf("duplicate list entries: %d and %d are both: %v",
 				dup, i, s)
 		}
+
 		dupMap[s] = i
 	}
+
 	return nil
 }

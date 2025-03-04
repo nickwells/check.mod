@@ -8,10 +8,12 @@ import "fmt"
 func MapLength[M ~map[K]V, K comparable, V any](cf ValCk[int]) ValCk[M] {
 	return func(v M) error {
 		lv := len(v)
+
 		err := cf(lv)
 		if err == nil {
 			return nil
 		}
+
 		return fmt.Errorf("the length of the map (%d) is incorrect: %w",
 			lv, err)
 	}
@@ -67,6 +69,7 @@ func MapKeyAll[M ~map[K]V, K comparable, V any](cf ValCk[K]) ValCk[M] {
 				return fmt.Errorf("map entry[%v], bad key: %w", k, err)
 			}
 		}
+
 		return nil
 	}
 }
@@ -83,6 +86,7 @@ func MapValAll[M ~map[K]V, K comparable, V any](cf ValCk[V]) ValCk[M] {
 				return fmt.Errorf("map entry[%v], bad value: %w", k, err)
 			}
 		}
+
 		return nil
 	}
 }
@@ -104,6 +108,7 @@ func MapKeyAny[M ~map[K]V, K comparable, V any](cf ValCk[K], msg string) ValCk[M
 				return nil
 			}
 		}
+
 		return fmt.Errorf("no map keys pass the test: %s", msg)
 	}
 }
@@ -125,6 +130,7 @@ func MapValAny[M ~map[K]V, K comparable, V any](cf ValCk[V], msg string) ValCk[M
 				return nil
 			}
 		}
+
 		return fmt.Errorf("no map values pass the test: %s", msg)
 	}
 }

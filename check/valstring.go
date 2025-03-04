@@ -12,10 +12,12 @@ import (
 func StringLength[T ~string](cf ValCk[int]) ValCk[T] {
 	return func(v T) error {
 		lv := len(v)
+
 		err := cf(lv)
 		if err == nil {
 			return nil
 		}
+
 		return fmt.Errorf("the length of the string (%d) is incorrect: %w",
 			lv, err)
 	}
@@ -32,6 +34,7 @@ func StringMatchesPattern[T ~string](re *regexp.Regexp, reDesc string) ValCk[T] 
 		if !re.MatchString(string(v)) {
 			return fmt.Errorf("%q should be: %s", v, reDesc)
 		}
+
 		return nil
 	}
 }
@@ -43,6 +46,7 @@ func StringHasPrefix[T ~string](prefix string) ValCk[T] {
 		if !strings.HasPrefix(string(v), prefix) {
 			return fmt.Errorf("%q should have %q as a prefix", v, prefix)
 		}
+
 		return nil
 	}
 }
@@ -54,6 +58,7 @@ func StringHasSuffix[T ~string](suffix string) ValCk[T] {
 		if !strings.HasSuffix(string(v), suffix) {
 			return fmt.Errorf("%q should have %q as a suffix", v, suffix)
 		}
+
 		return nil
 	}
 }
@@ -65,6 +70,7 @@ func StringContains[T ~string](substr string) ValCk[T] {
 		if !strings.Contains(string(v), substr) {
 			return fmt.Errorf("%q should contain %q", v, substr)
 		}
+
 		return nil
 	}
 }
@@ -76,6 +82,7 @@ func StringFoldedEQ[T ~string](s string) ValCk[T] {
 		if !strings.EqualFold(string(v), s) {
 			return fmt.Errorf("%q should equal %q when ignoring case", v, s)
 		}
+
 		return nil
 	}
 }

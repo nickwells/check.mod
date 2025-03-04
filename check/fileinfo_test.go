@@ -14,13 +14,16 @@ func TestFileInfo(t *testing.T) {
 	_ = os.Chmod(fileWithSetPerms, 0o600) // force the file mode
 
 	fileWithKnownInfo := "testdata/IsAFile"
+
 	fi, err := os.Stat(fileWithKnownInfo)
 	if err != nil {
 		t.Fatalf("pre-test setup:"+
 			" Cannot get the FileInfo from file: %s err: %s",
 			fileWithKnownInfo, err)
+
 		return
 	}
+
 	modTime := fi.ModTime()
 	timeBeforeModTime := modTime.Add(-60 * time.Second)
 	timeAfterModTime := modTime.Add(60 * time.Second)

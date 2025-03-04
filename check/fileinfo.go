@@ -15,6 +15,7 @@ func FileInfoSize(cf ValCk[int64]) ValCk[fs.FileInfo] {
 			return fmt.Errorf("the check on the size of %q failed: %w",
 				fi.Name(), err)
 		}
+
 		return nil
 	}
 }
@@ -28,6 +29,7 @@ func FileInfoPerm(cf ValCk[fs.FileMode]) ValCk[fs.FileInfo] {
 			return fmt.Errorf("the file permissions of %q are incorrect: %w",
 				fi.Name(), err)
 		}
+
 		return nil
 	}
 }
@@ -41,6 +43,7 @@ func FileInfoName(cf ValCk[string]) ValCk[fs.FileInfo] {
 			return fmt.Errorf("the file name %q is incorrect: %w",
 				fi.Name(), err)
 		}
+
 		return nil
 	}
 }
@@ -50,6 +53,7 @@ func FileInfoIsDir(fi fs.FileInfo) error {
 	if fi.IsDir() {
 		return nil
 	}
+
 	return fmt.Errorf("%q should be a directory", fi.Name())
 }
 
@@ -58,6 +62,7 @@ func FileInfoIsRegular(fi fs.FileInfo) error {
 	if fi.Mode().IsRegular() {
 		return nil
 	}
+
 	return fmt.Errorf("%q should be a regular file", fi.Name())
 }
 
@@ -75,6 +80,7 @@ func FileInfoMode(m fs.FileMode) ValCk[fs.FileInfo] {
 			typeBits&m != 0 {
 			return nil
 		}
+
 		return fmt.Errorf(
 			"%q should have been %s but was %s",
 			fi.Name(), modeName(m), modeName(typeBits))
@@ -95,25 +101,31 @@ func modeName(m fs.FileMode) string {
 		name += sep + "a directory"
 		sep = " or "
 	}
+
 	if m&fs.ModeSymlink == fs.ModeSymlink {
 		name += sep + "a symlink"
 		sep = " or "
 	}
+
 	if m&fs.ModeNamedPipe == fs.ModeNamedPipe {
 		name += sep + "a named pipe"
 		sep = " or "
 	}
+
 	if m&fs.ModeSocket == fs.ModeSocket {
 		name += sep + "a socket"
 		sep = " or "
 	}
+
 	if m&fs.ModeDevice == fs.ModeDevice {
 		name += sep + "a device"
 		sep = " or "
 	}
+
 	if m&fs.ModeIrregular == fs.ModeIrregular {
 		name += sep + "a non-regular file"
 	}
+
 	return name
 }
 
@@ -127,6 +139,7 @@ func FileInfoModTime(cf ValCk[time.Time]) ValCk[fs.FileInfo] {
 				"the modification time of %q is incorrect: %s",
 				fi.Name(), err)
 		}
+
 		return nil
 	}
 }

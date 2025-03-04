@@ -15,11 +15,13 @@ import (
 
 func TestFileInfoUnix(t *testing.T) {
 	filename := "testdata/IsAFile"
+
 	fi, err := os.Stat(filename)
 	if err != nil {
 		t.Fatalf("\t: cannot get the FileInfo from file: %s err: %s",
 			filename, err)
 	}
+
 	stat := fi.Sys().(*syscall.Stat_t)
 
 	testCases := []struct {

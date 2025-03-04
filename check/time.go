@@ -10,6 +10,8 @@ import (
 	"github.com/nickwells/tempus.mod/tempus"
 )
 
+const daysInAWeek = 7
+
 // TimeEQ returns a function that will check that the tested time is equal to
 // the time.Time parameters
 func TimeEQ(t time.Time) ValCk[time.Time] {
@@ -114,6 +116,7 @@ func dowValid(dow time.Weekday) error {
 	if dow >= time.Sunday && dow <= time.Saturday {
 		return nil
 	}
+
 	return fmt.Errorf(
 		"The day-of-week (%d) is invalid it must be in the range [%d - %d]",
 		dow, time.Sunday, time.Saturday)
@@ -123,16 +126,20 @@ func dowValid(dow time.Weekday) error {
 // the week that appear multiple times in the supplied slice.
 func findDupDOW(dows []time.Weekday) []string {
 	dupChk := map[time.Weekday]int{}
+
 	for _, dow := range dows {
 		dupChk[dow]++
 	}
+
 	dupVals := []string{}
+
 	for k, count := range dupChk {
 		if count > 1 {
 			dupVals = append(dupVals,
 				fmt.Sprintf("%s appears %d times", k, count))
 		}
 	}
+
 	return dupVals
 }
 
@@ -144,6 +151,7 @@ func findBadDOW(dows []time.Weekday) error {
 			return err
 		}
 	}
+
 	return nil
 }
 
@@ -165,20 +173,25 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 		days := []time.Weekday{dow}
 		days = append(days, otherDOW...)
 		valDow := val.Weekday()
+
 		for _, dow := range days {
 			if valDow == dow {
 				return nil
 			}
 		}
+
 		sep := ""
 		validDays := ""
+
 		for i, d := range days {
 			validDays += sep + d.String()
 			sep = ", "
+
 			if i == len(days)-2 {
 				sep = " or "
 			}
 		}
+
 		return fmt.Errorf("the day of the week (%s) must be a %s",
 			valDow, validDays)
 	}
@@ -189,6 +202,7 @@ func TimeIsALeapYear(t time.Time) error {
 	if tempus.IsLeapYear(t) {
 		return nil
 	}
+
 	return fmt.Errorf("the year (%d) is not a leap year", t.Year())
 }
 
@@ -214,6 +228,7 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 				" n (== %d) must be between 1 & 5 or -5 & -1",
 			n))
 	}
+
 	if err := dowValid(dow); err != nil {
 		panic(fmt.Errorf(
 			"Impossible check passed to TimeIsNthWeekdayOfMonth: %w", err))
@@ -228,7 +243,9 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 		}
 
 		var valDom int
+
 		var desc string
+
 		if n > 0 {
 			valDom = daysFromStartOfMonth(val)
 			desc = "of the month"
@@ -237,13 +254,15 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 			valDom = daysFromEndOfMonth(val)
 			desc = "from the end of the month"
 		}
-		wk := (valDom / 7) + 1
+
+		wk := (valDom / daysInAWeek) + 1
 		if n != wk {
 			return fmt.Errorf(
 				"the day is not the %d%s %s %s (it is the %d%s)",
 				n, english.OrdinalSuffix(n), dow, desc,
 				wk, english.OrdinalSuffix(wk))
 		}
+
 		return nil
 	}
 }

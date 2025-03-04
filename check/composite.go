@@ -20,6 +20,7 @@ func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 			compositeErr += sep + err.Error()
 			sep = "] or ["
 		}
+
 		return fmt.Errorf("%s]", compositeErr)
 	}
 }
@@ -35,6 +36,7 @@ func And[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 				return err
 			}
 		}
+
 		return nil
 	}
 }

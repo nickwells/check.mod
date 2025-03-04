@@ -22,6 +22,7 @@ func ValEQ[T comparable](limit T) ValCk[T] {
 		if v == limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must equal %v", v, limit)
 	}
 }
@@ -33,6 +34,7 @@ func ValNE[T comparable](limit T) ValCk[T] {
 		if v != limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must not equal %v", v, limit)
 	}
 }
@@ -44,6 +46,7 @@ func ValGT[T constraints.Ordered](limit T) ValCk[T] {
 		if v > limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must be greater than %v", v, limit)
 	}
 }
@@ -55,6 +58,7 @@ func ValGE[T constraints.Ordered](limit T) ValCk[T] {
 		if v >= limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must be greater than or equal to %v",
 			v, limit)
 	}
@@ -67,6 +71,7 @@ func ValLT[T constraints.Ordered](limit T) ValCk[T] {
 		if v < limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must be less than %v", v, limit)
 	}
 }
@@ -78,6 +83,7 @@ func ValLE[T constraints.Ordered](limit T) ValCk[T] {
 		if v <= limit {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%v) must be less than or equal to %v",
 			v, limit)
 	}
@@ -98,11 +104,13 @@ func ValBetween[T constraints.Ordered](low, high T) ValCk[T] {
 				"the value (%v) must be between %v and %v - too small",
 				v, low, high)
 		}
+
 		if v > high {
 			return fmt.Errorf(
 				"the value (%v) must be between %v and %v - too big",
 				v, low, high)
 		}
+
 		return nil
 	}
 }
@@ -114,6 +122,7 @@ func ValDivides[T constraints.Integer](d T) ValCk[T] {
 		if d%v == 0 {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%d) must be a divisor of %d", v, d)
 	}
 }
@@ -125,6 +134,7 @@ func ValIsAMultiple[T constraints.Integer](d T) ValCk[T] {
 		if v%d == 0 {
 			return nil
 		}
+
 		return fmt.Errorf("the value (%d) must be a multiple of %d", v, d)
 	}
 }

@@ -29,6 +29,7 @@ func Example() {
 			return
 		}
 	}
+
 	fmt.Println("All checks expected to pass, passed")
 
 	failingChecks := []check.ValCk[[]string]{
@@ -39,12 +40,15 @@ func Example() {
 	}
 
 	var someCheckPassed bool
+
 	for i, c := range failingChecks {
 		if err := c(s); err == nil {
 			fmt.Println("unexpected check success: ", i)
+
 			someCheckPassed = true
 		}
 	}
+
 	if !someCheckPassed {
 		fmt.Println("All checks expected to fail, failed")
 	}

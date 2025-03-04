@@ -10,7 +10,7 @@ type Aggregator[T any] interface {
 }
 
 // Counter implements the Aggregator interface. It counts the values that
-// pass the the value test and applies the count test
+// pass the value test and applies the count test
 type Counter[T any] struct {
 	valueTest ValCk[T]
 	countTest ValCk[int]
@@ -40,6 +40,7 @@ func (c *Counter[T]) Aggregate(val T) error {
 	if c.valueTest(val) == nil {
 		c.count++
 	}
+
 	return nil
 }
 

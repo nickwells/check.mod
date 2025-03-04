@@ -12,6 +12,7 @@ func FilePermEQ(perms fs.FileMode) ValCk[fs.FileMode] {
 		if fm.Perm() == perms {
 			return nil
 		}
+
 		return fmt.Errorf("the permissions (%04o) should equal %04o",
 			fm.Perm(), perms)
 	}
@@ -24,6 +25,7 @@ func FilePermHasAll(perms fs.FileMode) ValCk[fs.FileMode] {
 		if (fm.Perm() & perms) == perms {
 			return nil
 		}
+
 		return fmt.Errorf(
 			"the permissions (%04o) should have all of the permissions in %04o",
 			fm.Perm(), perms)
@@ -37,6 +39,7 @@ func FilePermHasNone(perms fs.FileMode) ValCk[fs.FileMode] {
 		if (fm.Perm() & perms) == 0 {
 			return nil
 		}
+
 		return fmt.Errorf(
 			"the permissions (%04o)"+
 				" should have none of the permissions in %04o",
