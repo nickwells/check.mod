@@ -249,8 +249,8 @@ func TestTime(t *testing.T) {
 			cf:  check.TimeIsNthWeekdayOfMonth(-1, time.Tuesday),
 			val: testTime,
 			ExpErr: testhelper.MkExpErr(
-				"the day is not the 1st Tuesday" +
-					" from the end of the month (it is the 2nd)"),
+				"the day is not the last Tuesday" +
+					" of the month (it is the 2nd from the end)"),
 		},
 	}
 

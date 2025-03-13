@@ -2,6 +2,7 @@ package check
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
 	"time"
@@ -9,8 +10,6 @@ import (
 	"github.com/nickwells/english.mod/english"
 	"github.com/nickwells/tempus.mod/tempus"
 )
-
-const daysInAWeek = 7
 
 // TimeEQ returns a function that will check that the tested time is equal to
 // the time.Time parameters
@@ -169,31 +168,24 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 			strings.Join(dupVals, ", ")))
 	}
 
+	days := []time.Weekday{dow}
+	days = append(days, otherDOW...)
+
 	return func(val time.Time) error {
-		days := []time.Weekday{dow}
-		days = append(days, otherDOW...)
 		valDow := val.Weekday()
 
-		for _, dow := range days {
-			if valDow == dow {
-				return nil
-			}
+		if slices.Contains(days, valDow) {
+			return nil
 		}
 
-		sep := ""
-		validDays := ""
+		dayNames := []string{}
 
-		for i, d := range days {
-			validDays += sep + d.String()
-			sep = ", "
-
-			if i == len(days)-2 {
-				sep = " or "
-			}
+		for _, d := range days {
+			dayNames = append(dayNames, d.String())
 		}
 
 		return fmt.Errorf("the day of the week (%s) must be a %s",
-			valDow, validDays)
+			valDow, english.Join(dayNames, ", ", " or "))
 	}
 }
 
@@ -244,25 +236,51 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 
 		var valDom int
 
-		var desc string
+		var fromEnd bool
 
 		if n > 0 {
 			valDom = daysFromStartOfMonth(val)
-			desc = "of the month"
 		} else {
 			n = -n
 			valDom = daysFromEndOfMonth(val)
-			desc = "from the end of the month"
+			fromEnd = true
 		}
 
-		wk := (valDom / daysInAWeek) + 1
+		wk := (valDom / tempus.DaysPerWeek) + 1
 		if n != wk {
 			return fmt.Errorf(
-				"the day is not the %d%s %s %s (it is the %d%s)",
-				n, english.OrdinalSuffix(n), dow, desc,
-				wk, english.OrdinalSuffix(wk))
+				"the day is not the %s of the month (it is the %s)",
+				expectedDowDesc(n, fromEnd, dow),
+				actualDowDesc(wk, fromEnd))
 		}
 
 		return nil
 	}
+}
+
+// expectedDowDesc returns a description of the day of the week within a month
+func expectedDowDesc(n int, fromEnd bool, dow time.Weekday) string {
+	if fromEnd {
+		if n == 1 {
+			return "last " + dow.String()
+		}
+
+		return fmt.Sprintf("%d%s %s from the end",
+			n, english.OrdinalSuffix(n), dow)
+	}
+
+	return fmt.Sprintf("%d%s %s", n, english.OrdinalSuffix(n), dow)
+}
+
+// actualDowDesc returns a description of the day of the week within a month
+func actualDowDesc(n int, fromEnd bool) string {
+	if fromEnd {
+		if n == 1 {
+			return "last"
+		}
+
+		return fmt.Sprintf("%d%s from the end", n, english.OrdinalSuffix(n))
+	}
+
+	return fmt.Sprintf("%d%s", n, english.OrdinalSuffix(n))
 }
