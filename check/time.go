@@ -3,7 +3,6 @@ package check
 import (
 	"fmt"
 	"slices"
-	"sort"
 	"strings"
 	"time"
 
@@ -162,7 +161,7 @@ func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 	}
 
 	if dupVals := findDupDOW(append(otherDOW, dow)); len(dupVals) > 0 {
-		sort.StringSlice(dupVals).Sort() // sort to make tests reproducible
+		slices.Sort(dupVals) // sort to make tests reproducible
 		panic(fmt.Errorf(
 			"Bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
 			strings.Join(dupVals, ", ")))
