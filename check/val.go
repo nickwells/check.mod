@@ -1,6 +1,7 @@
 package check
 
 import (
+	"cmp"
 	"fmt"
 
 	"golang.org/x/exp/constraints"
@@ -41,7 +42,7 @@ func ValNE[T comparable](limit T) ValCk[T] {
 
 // ValGT returns a function that will check that the value is
 // greater than the limit
-func ValGT[T constraints.Ordered](limit T) ValCk[T] {
+func ValGT[T cmp.Ordered](limit T) ValCk[T] {
 	return func(v T) error {
 		if v > limit {
 			return nil
@@ -53,7 +54,7 @@ func ValGT[T constraints.Ordered](limit T) ValCk[T] {
 
 // ValGE returns a function that will check that the value is
 // greater than or equal to the limit
-func ValGE[T constraints.Ordered](limit T) ValCk[T] {
+func ValGE[T cmp.Ordered](limit T) ValCk[T] {
 	return func(v T) error {
 		if v >= limit {
 			return nil
@@ -66,7 +67,7 @@ func ValGE[T constraints.Ordered](limit T) ValCk[T] {
 
 // ValLT returns a function that will check that the value is less
 // than the limit
-func ValLT[T constraints.Ordered](limit T) ValCk[T] {
+func ValLT[T cmp.Ordered](limit T) ValCk[T] {
 	return func(v T) error {
 		if v < limit {
 			return nil
@@ -78,7 +79,7 @@ func ValLT[T constraints.Ordered](limit T) ValCk[T] {
 
 // ValLE returns a function that will check that the value is less
 // than or equal to the limit
-func ValLE[T constraints.Ordered](limit T) ValCk[T] {
+func ValLE[T cmp.Ordered](limit T) ValCk[T] {
 	return func(v T) error {
 		if v <= limit {
 			return nil
@@ -91,7 +92,7 @@ func ValLE[T constraints.Ordered](limit T) ValCk[T] {
 
 // ValBetween returns a function that will check that the value
 // lies between the upper and lower limits (inclusive)
-func ValBetween[T constraints.Ordered](low, high T) ValCk[T] {
+func ValBetween[T cmp.Ordered](low, high T) ValCk[T] {
 	if low >= high {
 		panic(fmt.Sprintf("Impossible checks passed to ValBetween:"+
 			" the lower limit (%v) must be less than the upper limit (%v)",
