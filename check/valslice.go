@@ -82,7 +82,7 @@ func SliceAny[S ~[]E, E any](cf ValCk[E], msg string) ValCk[S] {
 			}
 		}
 
-		return fmt.Errorf("No list entries pass the test: %s", msg)
+		return fmt.Errorf("no list entries pass the test: %s", msg)
 	}
 }
 

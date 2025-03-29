@@ -116,7 +116,7 @@ func dowValid(dow time.Weekday) error {
 	}
 
 	return fmt.Errorf(
-		"The day-of-week (%d) is invalid it must be in the range [%d - %d]",
+		"the day-of-week (%d) is invalid it must be in the range [%d - %d]",
 		dow, time.Sunday, time.Saturday)
 }
 
@@ -157,13 +157,13 @@ func findBadDOW(dows []time.Weekday) error {
 // of the week given by one of the parameters
 func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
 	if err := findBadDOW(append(otherDOW, dow)); err != nil {
-		panic(fmt.Errorf("Impossible check passed to TimeIsOnDOW: %w", err))
+		panic(fmt.Errorf("impossible check passed to TimeIsOnDOW: %w", err))
 	}
 
 	if dupVals := findDupDOW(append(otherDOW, dow)); len(dupVals) > 0 {
 		slices.Sort(dupVals) // sort to make tests reproducible
 		panic(fmt.Errorf(
-			"Bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
+			"bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
 			strings.Join(dupVals, ", ")))
 	}
 
@@ -215,14 +215,14 @@ func daysFromEndOfMonth(t time.Time) int {
 func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 	if n == 0 || n > 5 || n < -5 {
 		panic(fmt.Errorf(
-			"Impossible check passed to TimeIsNthWeekdayOfMonth:"+
+			"impossible check passed to TimeIsNthWeekdayOfMonth:"+
 				" n (== %d) must be between 1 & 5 or -5 & -1",
 			n))
 	}
 
 	if err := dowValid(dow); err != nil {
 		panic(fmt.Errorf(
-			"Impossible check passed to TimeIsNthWeekdayOfMonth: %w", err))
+			"impossible check passed to TimeIsNthWeekdayOfMonth: %w", err))
 	}
 
 	return func(val time.Time) error {
