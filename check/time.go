@@ -14,7 +14,7 @@ import (
 // the time.Time parameters
 func TimeEQ(t time.Time) ValCk[time.Time] {
 	return func(val time.Time) error {
-		if val == t {
+		if val.Equal(t) {
 			return nil
 		}
 
@@ -50,7 +50,7 @@ func TimeGT(t time.Time) ValCk[time.Time] {
 // or equal to the time.Time parameter
 func TimeGE(t time.Time) ValCk[time.Time] {
 	return func(val time.Time) error {
-		if val.After(t) || val == t {
+		if val.After(t) || val.Equal(t) {
 			return nil
 		}
 
@@ -74,7 +74,7 @@ func TimeLT(t time.Time) ValCk[time.Time] {
 // or equal to the time.Time parameter
 func TimeLE(t time.Time) ValCk[time.Time] {
 	return func(val time.Time) error {
-		if val.Before(t) || val == t {
+		if val.Before(t) || val.Equal(t) {
 			return nil
 		}
 
@@ -85,8 +85,8 @@ func TimeLE(t time.Time) ValCk[time.Time] {
 // TimeBetween returns a function that will check that the tested time is
 // between the start and end times (inclusive)
 func TimeBetween(start, end time.Time) ValCk[time.Time] {
-	if start.After(end) || start == end {
-		panic(fmt.Errorf("Impossible checks passed to TimeBetween:"+
+	if start.After(end) || start.Equal(end) {
+		panic(fmt.Errorf("impossible checks passed to TimeBetween:"+
 			" the start time (%v) must be before the end time (%v)",
 			start, end))
 	}
