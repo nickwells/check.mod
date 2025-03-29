@@ -6,6 +6,8 @@ import (
 )
 
 // These aliases are to simplify the migration to the v2.0.0 version
+//
+//nolint:revive
 type (
 	Duration      = ValCk[time.Duration]
 	FileInfo      = ValCk[fs.FileInfo]
