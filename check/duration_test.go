@@ -186,6 +186,7 @@ func panicSafeTestDurationBetween(t *testing.T, ld, ud time.Duration) (
 			panicVal = r
 		}
 	}()
+
 	check.ValBetween(ld, ud)
 
 	return panicked, panicVal
