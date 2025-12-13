@@ -1,6 +1,9 @@
 package check
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 // Or returns a function that will check that the value, when passed to each
 // of the check funcs in turn, passes at least one of them. If any check
@@ -8,7 +11,7 @@ import "fmt"
 // the failing checks.
 func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 	return func(v T) error {
-		compositeErr := ""
+		var compositeErr strings.Builder
 		sep := "either ["
 
 		for _, cf := range chkFuncs {
@@ -17,11 +20,13 @@ func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 				return nil
 			}
 
-			compositeErr += sep + err.Error()
+			compositeErr.WriteString(sep)
+			compositeErr.WriteString(err.Error())
+
 			sep = "] or ["
 		}
 
-		return fmt.Errorf("%s]", compositeErr)
+		return fmt.Errorf("%s]", compositeErr.String())
 	}
 }
 
