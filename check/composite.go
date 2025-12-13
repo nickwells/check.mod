@@ -12,6 +12,7 @@ import (
 func Or[T any](chkFuncs ...ValCk[T]) ValCk[T] {
 	return func(v T) error {
 		var compositeErr strings.Builder
+
 		sep := "either ["
 
 		for _, cf := range chkFuncs {
