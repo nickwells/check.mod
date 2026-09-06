@@ -325,7 +325,7 @@ func TestTimeIsOnDOWPanic(t *testing.T) {
 			ID: testhelper.MkID("bad dow - too small"),
 			ExpPanic: testhelper.MkExpPanic(
 				"impossible check passed to TimeIsOnDOW:" +
-					" the day-of-week (-1) is invalid" +
+					" the weekday (-1) is invalid," +
 					" it must be in the range [0 - 6]"),
 			dow: -1,
 		},
@@ -333,7 +333,7 @@ func TestTimeIsOnDOWPanic(t *testing.T) {
 			ID: testhelper.MkID("bad dow - too big"),
 			ExpPanic: testhelper.MkExpPanic(
 				"impossible check passed to TimeIsOnDOW:" +
-					" the day-of-week (7) is invalid" +
+					" the weekday (7) is invalid," +
 					" it must be in the range [0 - 6]"),
 			dow: 7,
 		},
@@ -341,7 +341,7 @@ func TestTimeIsOnDOWPanic(t *testing.T) {
 			ID: testhelper.MkID("bad otherDOW - first"),
 			ExpPanic: testhelper.MkExpPanic(
 				"impossible check passed to TimeIsOnDOW:" +
-					" the day-of-week (7) is invalid" +
+					" the weekday (7) is invalid," +
 					" it must be in the range [0 - 6]"),
 			dow:      time.Monday,
 			otherDOW: []time.Weekday{7, time.Tuesday, time.Wednesday},
@@ -350,7 +350,7 @@ func TestTimeIsOnDOWPanic(t *testing.T) {
 			ID: testhelper.MkID("bad otherDOW - last"),
 			ExpPanic: testhelper.MkExpPanic(
 				"impossible check passed to TimeIsOnDOW:" +
-					" the day-of-week (99) is invalid" +
+					" the weekday (99) is invalid," +
 					" it must be in the range [0 - 6]"),
 			dow:      time.Monday,
 			otherDOW: []time.Weekday{time.Tuesday, time.Wednesday, 99},
@@ -463,7 +463,7 @@ func TestTimeIsNthWeekdayOfMonthPanic(t *testing.T) {
 			ID: testhelper.MkID("bad n/dow (1/-1) - bad dow"),
 			ExpPanic: testhelper.MkExpPanic(
 				"impossible check passed to TimeIsNthWeekdayOfMonth:" +
-					" the day-of-week (-1) is invalid" +
+					" the weekday (-1) is invalid," +
 					" it must be in the range [0 - 6]"),
 			n:   1,
 			dow: -1,

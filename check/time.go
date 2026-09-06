@@ -3,7 +3,6 @@ package check
 import (
 	"fmt"
 	"slices"
-	"strings"
 	"time"
 
 	"github.com/nickwells/english.mod/english"
@@ -108,83 +107,25 @@ func TimeBetween(start, end time.Time) ValCk[time.Time] {
 	}
 }
 
-// dowValid returns an error if the passed weekday is not between Sunday and
-// Saturday inclusive, nil otherwise.
-func dowValid(dow time.Weekday) error {
-	if dow >= time.Sunday && dow <= time.Saturday {
-		return nil
-	}
-
-	return fmt.Errorf(
-		"the day-of-week (%d) is invalid it must be in the range [%d - %d]",
-		dow, time.Sunday, time.Saturday)
-}
-
-// findDupDOW will return a slice (possibly empty) describing all the days of
-// the week that appear multiple times in the supplied slice.
-func findDupDOW(dows []time.Weekday) []string {
-	dupChk := map[time.Weekday]int{}
-
-	for _, dow := range dows {
-		dupChk[dow]++
-	}
-
-	dupVals := []string{}
-
-	for k, count := range dupChk {
-		if count > 1 {
-			dupVals = append(dupVals,
-				fmt.Sprintf("%s appears %d times", k, count))
-		}
-	}
-
-	return dupVals
-}
-
-// findBadDOW returns an error for the first bad entry in the slice of
-// Weekdays or nil if they are all good
-func findBadDOW(dows []time.Weekday) error {
-	for _, dow := range dows {
-		if err := dowValid(dow); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // TimeIsOnDOW returns a function that will check that the time is on the day
 // of the week given by one of the parameters
 func TimeIsOnDOW(dow time.Weekday, otherDOW ...time.Weekday) ValCk[time.Time] {
-	if err := findBadDOW(append(otherDOW, dow)); err != nil {
-		panic(fmt.Errorf("impossible check passed to TimeIsOnDOW: %w", err))
-	}
-
-	if dupVals := findDupDOW(append(otherDOW, dow)); len(dupVals) > 0 {
-		slices.Sort(dupVals) // sort to make tests reproducible
-		panic(fmt.Errorf(
-			"bad check passed to TimeIsOnDOW: Duplicate days-of-week: %s",
-			strings.Join(dupVals, ", ")))
-	}
-
 	days := []time.Weekday{dow}
 	days = append(days, otherDOW...)
 
-	return func(val time.Time) error {
-		valDow := val.Weekday()
+	if err := checkDays("TimeIsOnDOW", days); err != nil {
+		panic(err)
+	}
 
-		if slices.Contains(days, valDow) {
+	return func(val time.Time) error {
+		w := val.Weekday()
+
+		if slices.Contains(days, w) {
 			return nil
 		}
 
-		dayNames := []string{}
-
-		for _, d := range days {
-			dayNames = append(dayNames, d.String())
-		}
-
 		return fmt.Errorf("the day of the week (%s) must be a %s",
-			valDow, english.Join(dayNames, ", ", " or "))
+			w, daysToString(days))
 	}
 }
 
@@ -220,7 +161,7 @@ func TimeIsNthWeekdayOfMonth(n int, dow time.Weekday) ValCk[time.Time] {
 			n))
 	}
 
-	if err := dowValid(dow); err != nil {
+	if err := WeekdayIsValid(dow); err != nil {
 		panic(fmt.Errorf(
 			"impossible check passed to TimeIsNthWeekdayOfMonth: %w", err))
 	}
