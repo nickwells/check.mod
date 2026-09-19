@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/nickwells/english.mod/english"
-	"github.com/nickwells/tempus.mod/tempus"
+	"github.com/nickwells/tempus.mod/v2/tempus"
 )
 
 // TimeEQ returns a function that will check that the tested time is equal to
